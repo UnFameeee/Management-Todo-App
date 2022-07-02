@@ -1,24 +1,19 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
-const database = require('./models');
-Promise.resolve(require('./database/initData').initalize());
+Promise.resolve(require('./repository/initiateDB').initalize());
+const apiRoute = require("./routes/router") 
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
-
-database.sequelize.sync();
-
 
 const task = require("./routes/task.route");
 const user = require("./routes/user.route");
 
-app.use("/api/v1", task);
-app.use("/api/v1", user);
-
-
+app.use("/api/v1", apiRoute);
+// app.use("/api/v1", user);
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
