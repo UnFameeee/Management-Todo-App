@@ -12,7 +12,8 @@ module.exports.addUser = async(userData) => {
 
     const newUser = {
       ...userData,
-      password: await bcrypt.hash(userData.password, 10)
+      password: await bcrypt.hash(userData.password, 10),
+      role: "user"
     }
     
     await User.create(newUser).then(() => {
@@ -37,16 +38,16 @@ module.exports.addUser = async(userData) => {
 module.exports.checkUser = async(userData) => {
   let DataReturn = {};
   try{
-    const User = await User.findOne({where: {email: userData.email}});
-    if (!User) throw new Error(`Not found User with email ${userData.email}`);
+    const user = await User.findOne({where: {email: userData.email}});
+    if (!user) throw new Error(`Not found User with email ${userData.email}`);
 
-    const isMatchedPasswrord = await bcrypt.compare(userData.password, User.password);
+    const isMatchedPasswrord = await bcrypt.compare(userData.password, user.password);
     if (!isMatchedPasswrord) throw new Error("Password does not match");
 
     DataReturn = {
       status: 'success',
       message: 'Correct',
-      data: User
+      data: user
     }
   }
   catch(err){

@@ -16,7 +16,7 @@ database.users= require("./user.model.js")(sequelize, Sequelize);
 database.tasks= require("./task.model.js")(sequelize, Sequelize); 
 database.logs = require("./log.model.js")(sequelize, Sequelize); 
 
-database.users.hasMany(database.tasks, { foreignKey: "UserId", as: "tasks" });
+database.users.hasMany(database.tasks, { foreignKey: "userId", as: "tasks" });
 database.tasks.belongsTo(database.users);
 
 database.users.hasMany(database.logs, { foreignKey: "UserUpdate", as: "logs"});

@@ -18,6 +18,8 @@ const user = require("./routes/user.route");
 app.use("/api/v1", task);
 app.use("/api/v1", user);
 
+
+
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
