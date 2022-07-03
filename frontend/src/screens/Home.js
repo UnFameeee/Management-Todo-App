@@ -11,26 +11,12 @@ export default function Home() {
   const onImageChange = (e) => { 
     const [file] = e.target.files;
     setImageURL(URL.createObjectURL(file)); 
-  };
-
-  
+  };  
 
   let initialState = [
     {
       groupName: "Task",
-      tasks: [{ id: "1", title: "Test-1" }, { id: "2", title: "Test-2" }]
-    },
-    {
-      groupName: "User1",
-      tasks: [{ id: "3", title: "Test-3" }, { id: "4", title: "Test-4" }]
-    },
-    {
-      groupName: "User2",
-      tasks: [{ id: "5", title: "Test-5" }, { id: "6", title: "Test-6" }]
-    },
-    {
-      groupName: "User3",
-      tasks: [{ id: "7", title: "Test-7" }, { id: "8", title: "Test-8" }]
+      tasks: []
     },
   ];
 
@@ -83,7 +69,16 @@ export default function Home() {
 
   const dispatch = useDispatch();
   const getAllTasksNotAssingedReducer = useSelector((state) => state.getAllTasksNotAssingedReducer);
-  const { success, loadingGetAllTasksNotAssigned, error } = getAllTasksNotAssingedReducer;
+  const { success, loadingGetAllTasksNotAssigned, userWithTasks } = getAllTasksNotAssingedReducer;
+
+  useEffect(() => {
+    dispatch(getAllTasksNotAssingedAction())
+  });
+
+  if(userWithTasks) {
+    initialState[0].tasks=userWithTasks.data;
+    console.log(initialState)
+  }
 
   return (
     <>

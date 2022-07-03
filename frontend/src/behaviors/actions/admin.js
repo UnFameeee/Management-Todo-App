@@ -46,7 +46,7 @@ export const getAllTasksNotAssingedAction = () => async (dispatch) => {
             type:REQUEST_GET_ALL_TASKS_NOT_ASSIGNED
         })
 
-        const {data} = await axios.post(`${apiUrl}/task/newTasks`)
+        const {data} = await axios.get(`${apiUrl}/task/newTasks`)
 
         if(data){
             dispatch({
