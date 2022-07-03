@@ -1,4 +1,3 @@
-// const Status = require("../constants/status.constant");
 const Sequelize = require("sequelize")
 const sequelize = require("../repository/connection")
 

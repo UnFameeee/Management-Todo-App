@@ -6,7 +6,7 @@ const express = require("express");
 
 const apiRoute = express();
 
-apiRoute.use(userRouter);
-apiRoute.use(taskRouter);
+apiRoute.use("/user", userRouter);
+apiRoute.use("/task", taskRouter);
 
 module.exports = apiRoute;

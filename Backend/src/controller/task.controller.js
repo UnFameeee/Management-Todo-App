@@ -6,14 +6,14 @@ module.exports.addTask = async(req, res) => {
 }
 
 module.exports.updateTaskOwner = async(req, res) => {
-  const taskUpdate = parseInt(req.params.id);
-  const { userUpdate } = req.body;
-  res.json(await TaskService.updateOwner(userUpdate, taskUpdate));
+  const taskId = parseInt(req.params.id);
+  const data = req.body;
+  res.json(await TaskService.updateOwner(taskId, data));
 }
 
 module.exports.updateData = async(req, res) => {
   const taskId = parseInt(req.params.id);
-  const { taskData } = req.body;
+  const taskData = req.body;
   res.json(await TaskService.updateData(taskId, taskData));
 }
 

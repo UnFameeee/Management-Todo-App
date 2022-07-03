@@ -1,4 +1,5 @@
 const Task = require('../models/task.model');
+const User = require('../models/user.model');
 const TaskRepository = {};
 
 TaskRepository.createNewTask = async (taskData) => {
@@ -14,6 +15,24 @@ TaskRepository.updateTaskOwner = async (userId, taskId) => {
         { userId: userId }, 
         { where: {id: taskId} }
     )
+}
+
+TaskRepository.findTaskAndUserInfoByTaskId = async (taskData) => {
+    return await Task.findOne({
+        where: {id: taskData},
+        include: [{model: User, attributes:['id', 'username']}]
+    });
+}
+
+TaskRepository.updateTask = async (taskId, taskData) => {
+    Task.update({
+        title: taskData.title, 
+        description: taskData.description,
+        status: taskData.status,
+        isArchived: taskData.isArchived
+    }, {
+        where: {id: taskId}
+    })
 }
 
 module.exports = TaskRepository;
