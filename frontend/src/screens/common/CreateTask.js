@@ -6,7 +6,7 @@ import {
   faUser,
   faPlus,
   faList,
-  faBriefcase
+  faBriefcase,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Body = styled.div`
@@ -35,7 +35,7 @@ const Body = styled.div`
     display: ${(props) => (props.isClicked ? "none" : "block")};
 
     .popup-content {
-      border-radius:10px;
+      border-radius: 10px;
       width: 70vw;
       height: 70vh;
       position: absolute;
@@ -96,8 +96,46 @@ const Body = styled.div`
               background-color: gray;
             }
             .member-add-circle {
+              position: relative;
               background-color: rgb(234, 236, 240);
-              cursor:pointer;
+              cursor: pointer;
+              .add-member-popup-container {
+                border: 1px solid black;
+                position: absolute;
+                background-color: rgb(234, 236, 240);
+                width: 310px;
+                top: 35px;
+                left: 10px;
+                border-radius: 5px;
+                padding: 20px;
+                display: ${(props) =>
+                  props.isClickedAddMember ? "block" : "none"};
+
+                .title {
+                  display: flex;
+                  align-item: center;
+                  justify-content: center;
+                  h2 {
+                    margin: 0;
+                  }
+                }
+                .list-member {
+                  h3 {
+                    font-size: 15px;
+                    font-weight: 500;
+                  }
+                  .li-member {
+                    border: 1px solid black;
+                    margin-bottom: 4px;
+                    border-radius: 3px;
+                    padding: 0 5px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 10px;
+                  }
+                }
+              }
             }
           }
         }
@@ -129,11 +167,19 @@ const Body = styled.div`
         .save-button {
           margin-top: 31px;
           margin-left: 30px;
-          .save{
-            --sizing:40px;
-            width:var(--sizing);
-            height:30px;
-            cursor:pointer;
+          display: flex;
+          gap: 15px;
+          .save {
+            --sizing: 40px;
+            width: var(--sizing);
+            height: 30px;
+            cursor: pointer;
+          }
+          .archived {
+            --sizing: 70px;
+            width: var(--sizing);
+            height: 30px;
+            cursor: pointer;
           }
         }
       }
@@ -141,7 +187,7 @@ const Body = styled.div`
 
     button.close-popup {
       position: absolute;
-      border-radius:3px;
+      border-radius: 3px;
       top: 20px;
       right: 20px;
       font-size: 20px;
@@ -151,13 +197,23 @@ const Body = styled.div`
     }
   }
 `;
-export default function CreateTask() {
+function CreateTask() {
   const [isClicked, setIsClicked] = useState("false");
+  const [description, setDescription] = useState("");
+  const [isClickedAddMember, setIsClickedAddMember] = useState("false");
+  const test = localStorage.getItem("Roledata");
+
   const handleClickOpenModal = () => {
     setIsClicked((current) => !current);
   };
+  const handleClickedAddMember = () => {
+    setIsClickedAddMember((current) => !current);
+  };
+  const getDescription = (event) => {
+    setDescription(event.target.value);
+  };
   return (
-    <Body isClicked={isClicked}>
+    <Body isClicked={isClicked} isClickedAddMember={isClickedAddMember}>
       <div className="center">
         <button onClick={handleClickOpenModal}>Open modal</button>
       </div>
@@ -167,13 +223,14 @@ export default function CreateTask() {
             <FontAwesomeIcon icon={faBriefcase} />
             <h2 className="task-title"> Install Package</h2>
             <div className="header-status">
-              <text className="status-text">trong danh sách </text>
-              <a href="/">Doing</a>
+              <p className="status-text" style={{ margin: "0" }}>
+                trong danh sách <a href="/">Doing</a>
+              </p>
             </div>
           </div>
           <div className="assign-container-content">
             <div className="task-members">
-              <text>Thành viên</text>
+              <p>Thành viên</p>
               <div className="member-avatars">
                 <div className="member-avatars-circle">
                   <FontAwesomeIcon
@@ -185,7 +242,31 @@ export default function CreateTask() {
                   <FontAwesomeIcon
                     className="avatar-icon"
                     icon={faPlus}
+                    onClick={handleClickedAddMember}
                   ></FontAwesomeIcon>
+                  <div className="add-member-popup-container">
+                    <div className="title">
+                      <h2>Thành viên</h2>
+                    </div>
+                    <hr></hr>
+                    <div className="list-member">
+                      <h3 className="header">Thành viên của bảng</h3>
+                      <div className="li-member">
+                        <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+                        <p className="member-name">junrante</p>
+                      </div>
+                      <div className="li-member">
+                        <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
+                        <p className="member-name">Quan minh duke</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleClickedAddMember}
+                      className="close-popup"
+                    >
+                      x
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -196,10 +277,14 @@ export default function CreateTask() {
               <h2 className="des-title">Mô tả</h2>
             </div>
             <div className="text-area">
-              <textarea>dasdsadasdsa</textarea>
+              <textarea
+                value={description}
+                onChange={getDescription}
+              ></textarea>
             </div>
             <div className="save-button">
               <button className="save">Lưu</button>
+              <button className="archived">Lưu trữ</button>
             </div>
           </div>
 
@@ -211,3 +296,5 @@ export default function CreateTask() {
     </Body>
   );
 }
+
+export default CreateTask;

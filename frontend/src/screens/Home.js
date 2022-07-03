@@ -1,5 +1,7 @@
 import { DragDropContext } from "react-beautiful-dnd"
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllTasksNotAssingedAction } from "../behaviors/actions/admin";
 import Column from "./common/Column";
 
 export default function Home() {
@@ -78,6 +80,10 @@ export default function Home() {
     });
     setTasks(newTaskList);
   }
+
+  const dispatch = useDispatch();
+  const getAllTasksNotAssingedReducer = useSelector((state) => state.getAllTasksNotAssingedReducer);
+  const { success, loadingGetAllTasksNotAssigned, error } = getAllTasksNotAssingedReducer;
 
   return (
     <>
