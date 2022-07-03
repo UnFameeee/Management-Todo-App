@@ -179,11 +179,11 @@ export default function Login() {
     }
   };
 
-useEffect(() =>{
-  // if(success){
-  //   navigate('home')
-  // }
-})
+  useEffect(() =>{
+    if(success){
+      window.location.replace('/home')
+    }
+  }, [success])
 
   return (
     <div
