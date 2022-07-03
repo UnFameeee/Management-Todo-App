@@ -25,7 +25,7 @@ TaskRepository.findTaskAndUserInfoByTaskId = async (taskData) => {
 }
 
 TaskRepository.updateTask = async (taskId, taskData) => {
-    Task.update({
+    await Task.update({
         title: taskData.title, 
         description: taskData.description,
         status: taskData.status,
