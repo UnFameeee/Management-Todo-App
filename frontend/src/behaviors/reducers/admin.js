@@ -24,11 +24,11 @@ export const adminAddTaskReducer = (state={}, action) => {
 export const getAllTasksNotAssingedReducer = (state={}, action) => {
     switch(action.type){
         case REQUEST_GET_ALL_TASKS_NOT_ASSIGNED:
-            return {loadingLoginAccount: true}
+            return {loadingGetAllTasksNotAssigned: true}
         case GET_ALL_TASKS_NOT_ASSIGNED_SUCCESS:
-            return {loadingLoginAccount:false, success: true, userWithTasks: action.payload}
+            return {loadingGetAllTasksNotAssigned: false, success: true, userWithTasks: action.payload}
         case GET_ALL_TASKS_NOT_ASSIGNED_FAIL:
-            return {loadingLoginAccount: false, success: false}
+            return {loadingGetAllTasksNotAssigned: false, success: false}
         default:
             return state
     }
