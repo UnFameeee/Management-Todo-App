@@ -11,6 +11,8 @@ export default function Home() {
     setImageURL(URL.createObjectURL(file)); 
   };
 
+  
+
   let initialState = [
     {
       groupName: "Task",
@@ -142,7 +144,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <button className="add-task">Add Task</button>
+          <button className="add-task">Create Task</button>
           <div className="manage">            
             <DragDropContext onDragEnd={onDragEnd}>
               {taskList.map((task) => (
