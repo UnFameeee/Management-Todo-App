@@ -9,6 +9,7 @@ import {
 }
 from '../../common/constant'
 import axios from 'axios'
+import { alertAuthenticationError } from '../../common/libs'
 
 export const loginAccountAction = (email, password) => async (dispatch) =>{
     console.log(email, password)
@@ -16,9 +17,9 @@ export const loginAccountAction = (email, password) => async (dispatch) =>{
         dispatch({
             type:REQUEST_LOGIN_ACCOUNT
         })
-        const {data} = await axios.post(`${apiUrl}/login`,{email,password})
+        const {data} = await axios.post(`${apiUrl}/user/login`,{email,password})
         console.log(data)
-        if(data){
+        if(data.status==="success"){
             localStorage.setItem('AuthData',data)
             dispatch({
                 type:LOGIN_ACCOUNT_SUCCESS,
@@ -26,6 +27,7 @@ export const loginAccountAction = (email, password) => async (dispatch) =>{
             })
         }
         else{
+            alertAuthenticationError(data.message)
             dispatch({
                 type: LOGIN_ACCOUNT_FAIL
             })
@@ -50,14 +52,16 @@ export const registerAccountAction = (email,username,password) => async(dispatch
                 'content-type' : 'application/json',
             }
         }
-        const {data} = await axios.post(`${apiUrl}/register`,{email,username,password},config)
+        const {data} = await axios.post(`${apiUrl}/user/register`,{email,username,password},config)
         console.log(data)
-        if(data){
+
+        if(data.status === "success"){
             dispatch({
                 type:REGISTER_ACCOUNT_SUCCESS
             })
         }
         else{
+            alertAuthenticationError(data.message)
             dispatch({
                 type:REGISTER_ACCOUNT_FAIL
             })
