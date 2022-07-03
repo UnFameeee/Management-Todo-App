@@ -7,7 +7,10 @@ TaskRepository.createNewTask = async (taskData) => {
 }
 
 TaskRepository.findTaskById = async (taskId) => {
-    return await Task.findOne({where: {id: taskId}});
+    return await Task.findOne({
+        where: {id: taskId}, 
+        include: [{model: User, attributes:['id', 'username']}]
+    });
 }
 
 TaskRepository.updateTaskOwner = async (userId, taskId) => {

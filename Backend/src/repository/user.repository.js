@@ -1,4 +1,5 @@
 const User = require('../models/user.model')
+const Task = require('../models/task.model');
 const UserRepository = {};
 
 UserRepository.findUserByEmail = async (email) => {
@@ -25,6 +26,14 @@ UserRepository.updateUserPasswordById = async (userId, hashPw) => {
         { password: hashPw },
         { where: { id: userId } }
     )
+}
+
+UserRepository.findUserWithTaskById = async (userId) => {
+    return await User.findOne({
+        where: { id: userId},
+        attributes: ['id', 'username'],
+        include: [{model: Task, as: "tasks", attributes:['id', 'title']}]
+    })
 }
 
 module.exports = UserRepository;
