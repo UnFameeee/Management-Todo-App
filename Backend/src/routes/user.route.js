@@ -8,6 +8,4 @@ router.route('/login').post(login);
 router.route('/user/update-info/:id').put(updateUserInfo);
 router.route('/user/:id/password/change').put(updatePassword);
 
-//localhost:3000/api/v1/
-
 module.exports = router;
