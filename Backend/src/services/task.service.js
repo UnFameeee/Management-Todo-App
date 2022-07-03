@@ -63,6 +63,13 @@ module.exports.updateOwner = async(taskId, data) => {
   }
 }
 
+module.exports.getNewTasks = async() => {
+  let DataReturn = {};
+  const data  = await TaskRepository.getNewTasks();
+  DataReturn = dataResponse('success', 'Get success', data);
+  return DataReturn;
+}
+
 // module.exports.archivedTask = async (taskId) => {
 //   let DataReturn = {};
 //   try{

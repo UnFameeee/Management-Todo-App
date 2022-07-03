@@ -1,5 +1,6 @@
 const Task = require('../models/task.model');
 const User = require('../models/user.model');
+const Status = require('../constants/status.constant');
 const TaskRepository = {};
 
 TaskRepository.createNewTask = async (taskData) => {
@@ -35,6 +36,16 @@ TaskRepository.updateTask = async (taskId, taskData) => {
         isArchived: taskData.isArchived
     }, {
         where: {id: taskId}
+    })
+}
+
+TaskRepository.getNewTasks = async () => {
+    return await Task.findAll({
+        where: {
+            userId: null,
+            status: Status.READY,
+        },
+        attributes: ['id', 'title']
     })
 }
 

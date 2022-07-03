@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { addTask, updateTaskOwner, updateData, viewTask } = require('../controller/task.controller')
+const { addTask, updateTaskOwner, updateData, viewTask, getNewTasks } = require('../controller/task.controller')
 
 
 /**
@@ -46,5 +46,6 @@ router.route('/create').post(addTask);
 router.route('/update/:id/user').put(updateTaskOwner);
 router.route('/update/:id').put(updateData);
 router.route('/view/:id').get(viewTask);
+router.route('/newTasks').get(getNewTasks);
 
 module.exports = router;

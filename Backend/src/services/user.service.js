@@ -80,14 +80,25 @@ module.exports.updateUserPassword = async (userId, userData) => {
   }
 };
 
-module.exports.viewUserWithTask = async (userId) => {
+module.exports.viewUsersWithTask = async () => {
   let DataReturn = {};
   try {
-    const user = await UserRepository.findUserWithTaskById(userId);
-    if (!user) throw new Error(`User with id: ${userId} does not exist`);
-    DataReturn = dataResponse("success", "Success", user);
+    const data = await UserRepository.findUsersWithTaskById();
+    DataReturn = dataResponse("success", "Success", data || []);
   } catch (err){
     DataReturn = dataResponse("fail", err.message);
+  } finally {
+    return DataReturn;
+  }
+}
+
+module.exports.getAllUser = async() => {
+  let DataReturn = {};
+  try {
+    const users = await UserRepository.getAllUser();
+    DataReturn = dataResponse("success", "Success", users);
+  } catch (err){
+    dataReturn = dataResponse("fail", err.message);
   } finally {
     return DataReturn;
   }

@@ -21,3 +21,7 @@ module.exports.viewTask = async(req, res) => {
   const taskId = parseInt(req.params.id);
   res.json(await TaskService.viewTask(taskId));
 }
+
+module.exports.getNewTasks = async(req, res) => {
+  res.json(await await TaskService.getNewTasks());
+}

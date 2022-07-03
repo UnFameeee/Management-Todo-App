@@ -24,7 +24,10 @@ module.exports.updatePassword = async(req, res) => {
   res.json(await UserService.updateUserPassword(userId, userData));
 }
 
-module.exports.viewUserWithTask = async(req, res) => {
-  const userId = parseInt(req.params.id);
-  res.json(await UserService.viewUserWithTask(userId));
+module.exports.viewUsersWithTask = async(req, res) => {
+  res.json(await UserService.viewUsersWithTask());
+}
+
+module.exports.getAllUser = async(req, res) => {
+  res.json(await UserService.getAllUser());
 }
