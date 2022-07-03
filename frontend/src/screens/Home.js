@@ -73,12 +73,9 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getAllTasksNotAssingedAction())
-  });
+  }, []);
 
-  if(userWithTasks) {
-    initialState[0].tasks=userWithTasks.data;
-    console.log(initialState)
-  }
+  
 
   return (
     <>
