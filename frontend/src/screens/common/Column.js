@@ -12,7 +12,7 @@ export default function Column(props) {
                 <h2 style={{margin:'10px 0', color:'white', fontWeight:'700', pointerEvents:'auto'}}>{droppableId}</h2>
 
                 {list.map((val, index) =>
-                    <Task id={val.id.toString()} key={val.id.toString()} index={index} title={val.title} />
+                    <Task id={val.id} key={val.id} index={index} title={val.title} />
                 )}
 
                 {provided.placeholder}

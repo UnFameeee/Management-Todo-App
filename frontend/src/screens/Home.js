@@ -23,6 +23,7 @@ export default function Home() {
   useEffect(() => {
     dispatch(getAllTasksNotAssingedAction());
   }, []);
+
   const roleData = localStorage.getItem("RoleData");
   useEffect(() => {
     if (!roleData) {
@@ -41,9 +42,8 @@ export default function Home() {
 
   if (userWithTasks) {
     initialState[0].tasks = userWithTasks.data;
-    console.log(initialState)
   }
-  
+
   function onDragEnd(val) {
     /// A different way!
     const { draggableId, source, destination } = val;
@@ -157,7 +157,7 @@ export default function Home() {
             </div>
           </div>
           <button className="add-task">Create Task</button>
-          <div className="manage">
+          <div className="manage" onClick={()=>{setTasks(initialState)}}>
             <DragDropContext onDragEnd={onDragEnd}>
               {taskList &&
                 taskList.map((task) => (
