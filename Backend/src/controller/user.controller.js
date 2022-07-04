@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 let tokens = []; 
 
 module.exports.register = async (req, res, next) => {
-  console.log("hello")
   let dataReturn = {};
   const dataCreate = req.body;
   dataReturn = await UserService.addUser(dataCreate);

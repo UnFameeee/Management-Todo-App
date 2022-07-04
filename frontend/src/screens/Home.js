@@ -1,8 +1,11 @@
 import { DragDropContext } from "react-beautiful-dnd";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllTasksNotAssingedAction, getAllTasksAssingedAction  } from "../behaviors/actions/admin";
+import { getAllTasksNotAssingedAction, getAllTasksAssingedAction, adminAddTaskAction, adminAssignTaskAction  } from "../behaviors/actions/admin";
 import Column from "./common/Column";
+import CreateTask from "./common/CreateTask";
+import { alertSuccess } from "../common/libs";
+import ViewTask from "./common/Viewtask";
 
 export default function Home() {
   const [imageURL, setImageURL] = useState(); // user avatar
@@ -17,17 +20,16 @@ export default function Home() {
   const getAllTasksNotAssingedReducer = useSelector(
     (state) => state.getAllTasksNotAssingedReducer
   );
-  const { success, loadingGetAllTasksNotAssigned, TasksNotAssigned } =
-    getAllTasksNotAssingedReducer;
+  const { TasksNotAssigned } = getAllTasksNotAssingedReducer;
 
   const getAllTasksAssingedReducer = useSelector(
     (state) => state.getAllTasksAssingedReducer
   );
-  const { getTaskSuccess, loadingGetAllTasksAssigned, TasksAssigned } =
-    getAllTasksAssingedReducer; 
+  const { TasksAssigned } = getAllTasksAssingedReducer; 
 
   let initialState = [
     {
+      id: 'admin',
       name: "Task",
       tasks: [],
     },
@@ -52,13 +54,13 @@ export default function Home() {
   }, [TasksAssigned]);
 
   const roleData = localStorage.getItem("RoleData");
-  // useEffect(() => {
-  //   if (!roleData) {
-  //     window.location.replace("/forbiden");
-  //   }
-  // }, [roleData]);
-
-  function onDragEnd(val) {
+  useEffect(() => {
+    if (!roleData) {
+      window.location.replace("/forbiden");
+    }
+  }, [roleData]); 
+  
+  function onDragEnd(val) {    
     /// A different way!
     const { draggableId, source, destination } = val;
 
@@ -74,6 +76,10 @@ export default function Home() {
           (column) => column.name === destination.droppableId
         )
       : { ...sourceGroup };
+
+    if(destinationGroup.id==='admin'|| sourceGroup===destinationGroup) return;
+    
+    dispatch(adminAssignTaskAction(destinationGroup.id, destinationGroup.name, draggableId));
 
     // We save the task we are moving
     const [movingTask] = sourceGroup.tasks.filter((t) => t.id === draggableId);
@@ -100,11 +106,19 @@ export default function Home() {
           tasks: newDestinationGroupTasks,
         };
       }
-      return column;
+      return column; 
     });
     setTasks(newTaskList);
   }
 
+  function onDragStart(val) {
+    
+    const { draggableId, source, destination } = val;
+
+  }
+
+  const [isClicked, setIsClicked] = useState(false); //popup modals
+  
   return (
     <>
       <div className="mainpage">
@@ -170,16 +184,16 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <button className="add-task">Create Task</button>
+          <button className="add-task" onClick={() => {setIsClicked(!isClicked)}}>Create Task</button>
           <div className="manage">
-            <DragDropContext onDragEnd={onDragEnd}>
+            <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
               {taskList &&
-                taskList.map((task) => (
+                taskList.map((user) => (
                   <Column
-                    key={task.name}
+                    key={user.id}
                     className="column"
-                    droppableId={task.name}
-                    list={task.tasks}
+                    droppableId={user.name}
+                    list={user.tasks}
                     type="TASK"
                   />
                 ))}
@@ -221,6 +235,8 @@ export default function Home() {
           </div>
           <button>Change</button>
         </div>
+        {isClicked && <CreateTask setIsClicked={setIsClicked} isClicked={isClicked}/>}
+        <ViewTask />
       </div>
       <style>{`
           .mainpage {

@@ -9,36 +9,69 @@ import {
     REQUEST_GET_ALL_TASKS_ASSIGNED,
     GET_ALL_TASKS_ASSIGNED_SUCCESS,
     GET_ALL_TASKS_ASSIGNED_FAIL,
+    REQUEST_ADMIN_ASSIGN_TASK,
+    ADMIN_ASSIGN_TASK_SUCCESS,
+    ADMIN_ASSIGN_TASK_FAIL,
 }
 from '../../common/constant'
 import axios from 'axios'
+import { alertSuccess } from '../../common/libs'
 
-export const adminAddTaskAction = () => async (dispatch) => {
+export const adminAddTaskAction = (title, description) => async (dispatch) => {
     try{
         dispatch({
             type:ADMIN_REQUEST_ADD_TASK
         })
 
-        const {data} = await axios.post(`${apiUrl}/login`)
+        const config = {
+            headers: {
+                'content-type' : 'application/json',
+            }
+        }
 
-        if(data){
-            localStorage.setItem('AuthData',data)
-            dispatch({
-                type:ADMIN_ADD_TASK_SUCCESS,
-                payload:data
-            })
-        }
-        else{
-            dispatch({
-                type: ADMIN_ADD_TASK_FAIL
-            })
-        }
+        const {data} = await axios.post(`${apiUrl}/task/create`, {title,description}, config)
+
+        dispatch({
+            type:ADMIN_ADD_TASK_SUCCESS,
+            payload:data
+        })      
 
     }
     catch(error){
         console.log(error)
         dispatch({
             type: ADMIN_ADD_TASK_FAIL
+        })
+    }
+}
+
+export const adminAssignTaskAction = (userId, username, taskid) => async (dispatch) => {
+    try{
+        dispatch({
+            type:REQUEST_ADMIN_ASSIGN_TASK
+        })
+        
+        const config = {
+            headers: {
+                'content-type' : 'application/json',
+            }
+        }
+
+        const {data} = await axios.put(`${apiUrl}/task/update/${taskid}/user`, {userId}, config)
+
+        if(data)
+          alertSuccess(`Assign Task`, `To ${username} Successfully`, 'home')
+
+        dispatch({
+            type:ADMIN_ASSIGN_TASK_SUCCESS,
+            payload:data
+        })      
+
+    }
+    catch(error){
+        console.log(error)
+        dispatch({
+            type: ADMIN_ASSIGN_TASK_FAIL
         })
     }
 }

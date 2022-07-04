@@ -29,3 +29,12 @@ export const alertAuthenticationError = (message) => {
     icon: "error",
   });
 };
+
+export const alertSuccess = (title, message, url) => {
+  Swal.fire({
+    title: `${title}`,
+    text: `${message}`,
+    icon: "success",
+    didClose: () => {window.location.replace(`/${url}`)}
+  });
+}

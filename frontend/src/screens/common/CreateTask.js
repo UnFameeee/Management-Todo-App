@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { adminAddTaskAction } from "../../behaviors/actions/admin";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faPlus,
-  faList,
-  faBriefcase,
-} from "@fortawesome/free-solid-svg-icons";
+import { faList, faBriefcase } from "@fortawesome/free-solid-svg-icons";
+import { alertSuccess } from "../../common/libs";
 
 const Body = styled.div`
+  svg{
+    height: 20px
+  }
   > #popup {
     position: fixed;
     top: 0px;
@@ -19,13 +20,14 @@ const Body = styled.div`
     display: ${(props) => (props.isClicked ? "block" : "none")};
 
     .popup-content {
+      overflow: hidden;
       border-radius: 10px;
-      width: 70vw;
-      height: 70vh;
+      width: 50vw;
+      height: 60vh;
       position: absolute;
       top: 50%;
       left: 50%;
-      padding: 10px 20px;
+      padding-top: 30px;
       transform: translate(-50%, -50%);
       background: rgb(244, 245, 247);
 
@@ -34,7 +36,9 @@ const Body = styled.div`
         align-items: center;
         justify-content: flex-start;
         gap: 10px;
+        padding: 0 30px;
         .task-title {
+          font-size: 26px;
           font-weight: 400;
           line-height: 0px;
         }
@@ -124,148 +128,140 @@ const Body = styled.div`
           }
         }
       }
+      .task {
+        margin: 10px 30px;
+        input {
+            width: calc(100% - 40px);
+            font-size: 14px;
+            padding: 0 20px;
+            height: 40px;
+            border: 1px black solid;
+            border-radius: 8px;
+        }
+      }
+
       .description {
         height: 150px;
         margin-top: 20px;
         .header {
+          padding: 10px 30px;
           display: flex;
           align-items: center;
           justify-content: flex-start;
           gap: 10px;
           .des-title {
+            font-size: 26px;
             font-weight: 400;
             line-height: 0px;
           }
         }
         .text-area {
           margin-left: 30px;
-          width: 100%;
-          height: 90%;
+          margin-right: 30px;
+          height: 100%;
           textarea {
-            padding: 10px;
-            width: 90%;
+            line-height: 20px;
+            border: 1px black solid;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            width: calc(100% - 40px);
             height: 100%;
             resize: none;
           }
         }
         .save-button {
-          margin-top: 31px;
+          margin-top: 40px;
           margin-left: 30px;
           display: flex;
           gap: 15px;
           .save {
-            --sizing: 40px;
+            border-radius: 10px;
+            --sizing: 100px;
             width: var(--sizing);
-            height: 30px;
+            height: 40px;
+            background-color: black;
+            color: white;
             cursor: pointer;
           }
-          .archived {
-            --sizing: 70px;
-            width: var(--sizing);
-            height: 30px;
-            cursor: pointer;
+          .save:hover {
+            box-shadow: 0 0 10px black;
           }
         }
       }
     }
 
     button.close-popup {
+      background-image: url(https://static.xx.fbcdn.net/rsrc.php/v3/y0/r/TQbmXZsHdfU.png);
+      background-position: 0px -464px;
+      background-size: 26px 930px;
+      background-repeat: no-repeat;
+      display: inline-block;
       position: absolute;
-      border-radius: 3px;
-      top: 20px;
-      right: 20px;
-      font-size: 20px;
-      font-weight: 600;
-      text-decoration: none;
+      height: 30px;
+      width: 30px;
+      border: none;
+      top: 4px;
+      right: -4px;
       cursor: pointer;
     }
   }
 `;
-export default function ViewTask(props) {
+
+export default function CreateTask(props) {
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [isClickedAddMember, setIsClickedAddMember] = useState("false");
-  const roleData = localStorage.getItem("Roledata");
-  const handleClickedAddMember = () => {
-    setIsClickedAddMember((current) => !current);
-  };
-  const getDescription = (event) => {
-    setDescription(event.target.value);
-  };
+  
+  const dispatch = useDispatch();
+  const adminAddTaskReducer = useSelector(
+    (state) => state.adminAddTaskReducer
+  );
+  const { success, loadingAddTask, message } = adminAddTaskReducer;
+  
+  if(message) {
+    alertSuccess(title, message, 'home')  
+  }
+
+  function handleClickCreateTask() {  
+    dispatch(adminAddTaskAction(title,description))
+  }
+  
   return (
-    <Body isClicked={props.isClicked} isClickedAddMember={isClickedAddMember}>
+    <Body isClicked={props.isClicked}>
       <div id="popup">
         <div className="popup-content">
           <div className="popup-header">
             <FontAwesomeIcon icon={faBriefcase} />
-            <h2 className="task-title"> Install Package</h2>
-            <div className="header-status">
-              <p className="status-text" style={{ margin: "0" }}>
-                trong danh sách <a href="/">Doing</a>
-              </p>
-            </div>
+            <h2 className="task-title">Create New Task</h2>
           </div>
-          <div className="assign-container-content">
-            <div className="task-members">
-              <p>Thành viên</p>
-              <div className="member-avatars">
-                <div className="member-avatars-circle">
-                  <FontAwesomeIcon
-                    className="avatar-icon"
-                    icon={faUser}
-                  ></FontAwesomeIcon>
-                </div>
-                <div className="member-add-circle">
-                  <FontAwesomeIcon
-                    className="avatar-icon"
-                    icon={faPlus}
-                    onClick={handleClickedAddMember}
-                  ></FontAwesomeIcon>
-                  <div className="add-member-popup-container">
-                    <div className="title">
-                      <h2>Thành viên</h2>
-                    </div>
-                    <hr></hr>
-                    <div className="list-member">
-                      <h3 className="header">Thành viên của bảng</h3>
-                      <div className="li-member">
-                        <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-                        <p className="member-name">junrante</p>
-                      </div>
-                      <div className="li-member">
-                        <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-                        <p className="member-name">Quan minh duke</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={handleClickedAddMember}
-                      className="close-popup"
-                    >
-                      x
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+          <div className="task">
+            <input 
+              placeholder="Task title"
+              onChange={(e) => {setTitle(e.target.value)}}
+            ></input>
           </div>
+
           <div className="description">
             <div className="header">
               <FontAwesomeIcon icon={faList} />
-              <h2 className="des-title">Mô tả</h2>
+              <h2 className="des-title">Description</h2>
             </div>
             <div className="text-area">
               <textarea
+                placeholder="Task description"
                 value={description}
-                onChange={getDescription}
+                onChange={(e) => {setDescription(e.target.value)}}
               ></textarea>
             </div>
             <div className="save-button">
-              <button className="save">Lưu</button>
-              {roleData && <button className="archived">Lưu trữ</button>}
+              <button className="save" onClick={handleClickCreateTask}>Create</button>
             </div>
           </div>
-
-          <button onClick={() => {props.setIsClicked(!props.isClicked)}} className="close-popup">
-            x
+          <button 
+            onClick={() => {props.setIsClicked(!props.isClicked)}} 
+            className="close-popup"
+          > 
           </button>
         </div>
       </div>

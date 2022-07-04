@@ -8,17 +8,33 @@ import {
     REQUEST_GET_ALL_TASKS_ASSIGNED,
     GET_ALL_TASKS_ASSIGNED_SUCCESS,
     GET_ALL_TASKS_ASSIGNED_FAIL,
+    REQUEST_ADMIN_ASSIGN_TASK,
+    ADMIN_ASSIGN_TASK_SUCCESS,
+    ADMIN_ASSIGN_TASK_FAIL,
 }
 from '../../common/constant'
 
 export const adminAddTaskReducer = (state={}, action) => {
     switch(action.type){
         case ADMIN_REQUEST_ADD_TASK:
-            return {loadingLoginAccount: true}
+            return {loadingAddTask: true}
         case ADMIN_ADD_TASK_SUCCESS:
-            return {loadingLoginAccount:false, success: true}
+            return {loadingAddTask:false, success: true, message: action.payload.message}
         case ADMIN_ADD_TASK_FAIL:
-            return {loadingLoginAccount: false, success: false}
+            return {loadingAddTask: false, success: false}
+        default:
+            return state
+    }
+}
+
+export const adminAssignTaskReducer = (state={}, action) => {
+    switch(action.type){
+        case REQUEST_ADMIN_ASSIGN_TASK:
+            return {loadingAssignTask: true}
+        case ADMIN_ASSIGN_TASK_SUCCESS:
+            return {loadingAssignTask:false, success: true, message: action.payload.message}
+        case ADMIN_ASSIGN_TASK_FAIL:
+            return {loadingAssignTask: false, success: false}
         default:
             return state
     }

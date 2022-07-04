@@ -13,7 +13,11 @@ module.exports.handleValidation = (req, res, next) => {
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed.");
     error.statusCode = 422;
-    error.data = errors.array();
+    arrayData = [];
+    error.data = "";
+    errors.errors.forEach(element => {
+      arrayData.push(element.msg);
+    }, error.data = arrayData);
     throw error;
   }
   next();
