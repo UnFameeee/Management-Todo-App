@@ -1,8 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const { body, param } = require("express-validator");
 
-const { addTask, updateTaskOwner, updateData, viewTask, getNewTasks } = require('../controller/task.controller')
-
+const {
+  addTask,
+  updateTaskOwner,
+  updateData,
+  viewTask,
+  getNewTasks,
+} = require("../controller/task.controller");
 
 /**
  * @swagger
@@ -34,18 +40,19 @@ const { addTask, updateTaskOwner, updateData, viewTask, getNewTasks } = require(
  *               items:
  */
 
-//  *     parameters:
-//  *       - in: path
-//  *         name: id
-//  *         schema:
-//  *           type: int
-//  *         required: true
-//  *         description: The task id
+router
+  .route("/create")
+  .post(addTask);
 
-router.route('/create').post(addTask);
-router.route('/update/:id/user').put(updateTaskOwner);
-router.route('/update/:id').put(updateData);
-router.route('/view/:id').get(viewTask);
-router.route('/newTasks').get(getNewTasks);
+router
+  .route("/update/:id/user", [
+    param("id")
+      .matches(/^[0-9]+$/)
+      .withMessage("Id does not exist"),
+  ])
+  .put(updateTaskOwner);
+router.route("/update/:id").put(updateData);
+router.route("/view/:id").get(viewTask);
+router.route("/newTasks").get(getNewTasks);
 
 module.exports = router;
