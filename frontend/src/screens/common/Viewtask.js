@@ -197,7 +197,7 @@ const Body = styled.div`
     }
   }
 `;
-export default function ViewTask() {
+export default function ViewTask(props) {
   const [isClicked, setIsClicked] = useState("false");
   const [description, setDescription] = useState("");
   const [isClickedAddMember, setIsClickedAddMember] = useState("false");
