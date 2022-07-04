@@ -2,10 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 Promise.resolve(require('./repository/initiateDB').initalize());
-const apiRoute = require("./routes/router") 
-
+ 
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");  
+const { exception } = require("./middleware/validation.middleware");
+const apiRoute = require("./routes/router")
+
 
 const options = {
   definition: {
@@ -31,18 +33,20 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/v1", apiRoute);
-
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use("/api/v1", apiRoute);
+
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to gacoder.info" });
 });
+
+app.use(exception)
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;

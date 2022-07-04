@@ -1,8 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const { body, param } = require("express-validator");
 
 const { addTask, updateTaskOwner, updateData, viewTask, getNewTasks } = require('../controller/task.controller')
-
+const { isAuthenticatedUser, authorizeUserRole } = require('../middleware/authenticate.middleware')
 
 /**
  * @swagger
@@ -34,18 +35,21 @@ const { addTask, updateTaskOwner, updateData, viewTask, getNewTasks } = require(
  *               items:
  */
 
-//  *     parameters:
-//  *       - in: path
-//  *         name: id
-//  *         schema:
-//  *           type: int
-//  *         required: true
-//  *         description: The task id
+router
+  .route("/create")
+  .post(addTask);
 
-router.route('/create').post(addTask);
-router.route('/update/:id/user').put(updateTaskOwner);
-router.route('/update/:id').put(updateData);
-router.route('/view/:id').get(viewTask);
-router.route('/newTasks').get(getNewTasks);
+
+router
+  .route("/update/:id/user", [
+    param("id")
+      .matches(/^[0-9]+$/)
+      .withMessage("Id does not exist"),
+  ])
+  .put(isAuthenticatedUser, authorizeUserRole('leader'), updateTaskOwner);
+router.route('/create').post(isAuthenticatedUser, authorizeUserRole('leader'), addTask);
+router.route('/update/:id').put(isAuthenticatedUser, updateData);
+router.route('/view/:id').get(isAuthenticatedUser, viewTask);
+router.route('/newTasks').get(isAuthenticatedUser, authorizeUserRole('leader'), getNewTasks);
 
 module.exports = router;
