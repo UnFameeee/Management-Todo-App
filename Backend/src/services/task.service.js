@@ -7,13 +7,13 @@ module.exports.addTask = async (taskData) => {
   let DataReturn = {};
   try{
     const newTask = await TaskRepository.createNewTask(taskData)
-    DataReturn = dataResponse('success', 'Task created successfully', newTask);
+    DataReturn = dataResponse(201, 'success', 'Task created successfully', newTask);
   }
   catch(err) {
     const ErrorList = err.errors;
     ErrorList.map(err => {
       const msg = err.message;
-      DataReturn = dataResponse('fail', msg.split('.')[1])
+      DataReturn = dataResponse(400, 'fail', msg.split('.')[1])
     })
   }
   finally{
@@ -28,10 +28,10 @@ module.exports.updateData = async (taskId, taskData) => {
     if(!task) throw new Error("Task does not exist")
     await TaskRepository.updateTask(taskId, taskData)
     const updatedTask = await TaskRepository.findTaskAndUserInfoByTaskId(taskId);
-    DataReturn = dataResponse('success', 'Task updated successfully', updatedTask)
+    DataReturn = dataResponse(201, 'success', 'Task updated successfully', updatedTask)
   }
   catch (err){
-    DataReturn = dataResponse('fail', err.message);
+    DataReturn = dataResponse(400, 'fail', err.message);
   }
   finally {
     return DataReturn;
@@ -43,10 +43,10 @@ module.exports.viewTask = async (taskId) => {
   try{
     const task = await TaskRepository.findTaskById(taskId);
     if(!task) throw new Error("Task does not exist")
-    DataReturn = dataResponse('success', 'Data Response', task);
+    DataReturn = dataResponse(200, 'success', 'Data Response', task);
   }
   catch(err){
-    DataReturn = dataResponse('fail', err.message);
+    DataReturn = dataResponse(400, 'fail', err.message);
   }
   finally {
     return DataReturn;

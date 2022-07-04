@@ -6,21 +6,18 @@ module.exports.addUser = async (userData) => {
   let DataReturn = {};
   try {
     if (userData.email === undefined) throw new Error("No email found");
-
     const existUser = await UserRepository.findUserByEmail(userData.email);
-
     if (existUser) throw new Error("User already exists");
 
     const newUser = {
       ...userData,
       password: await Bcrypt.encode(userData.password)
     };
-
     await UserRepository.createNewUser(newUser);
 
-    DataReturn = dataResponse("success", "Create Successfully", newUser);
+    DataReturn = dataResponse(201, "success", "Create Successfully", newUser);
   } catch (err) {
-    DataReturn = dataResponse("fail", err.message);
+    DataReturn = dataResponse(400, "fail", err.message);
   } finally {
     return DataReturn;
   }
@@ -35,9 +32,9 @@ module.exports.checkUser = async (userData) => {
 
     if (!await Bcrypt.compare(userData.password, user.password)) throw new Error("Password does not match");
 
-    DataReturn = dataResponse("success", "Correct", user);
+    DataReturn = dataResponse(201, "success", "Correct", user);
   } catch (err) {
-    DataReturn = dataResponse("fail", err.message);
+    DataReturn = dataResponse(400, "fail", err.message);
   } finally {
     return DataReturn;
   }
@@ -51,9 +48,9 @@ module.exports.updateUserInfo = async (userId, userData) => {
     else if(user.email !== userData.email) throw new Error("Email does not match");
 
     await UserRepository.updateUserById(userId, userData);
-    DataReturn = dataResponse("success", "User Updated Successfully");
+    DataReturn = dataResponse(201, "success", "User Updated Successfully");
   } catch (err) {
-    DataReturn = dataResponse("fail", err.message)
+    DataReturn = dataResponse(400, "fail", err.message)
   } finally {
     return DataReturn;
   }
@@ -68,9 +65,9 @@ module.exports.updateUserPassword = async (userId, userData) => {
     
     const newPasswordHashed = await Bcrypt.encode(userData.newPassword);
     await UserRepository.updateUserPasswordById(userId, newPasswordHashed);
-    DataReturn = dataResponse("success", "Update Password Successfully");
+    DataReturn = dataResponse(201, "success", "Update Password Successfully");
   } catch (err) {
-    DataReturn = dataResponse("fail", err.message);
+    DataReturn = dataResponse(400, "fail", err.message);
   } finally {
     return DataReturn;
   }
@@ -80,9 +77,9 @@ module.exports.viewUsersWithTask = async() => {
   let DataReturn = {};
   try {
     const data = await UserRepository.findUsersWithTaskById();
-    DataReturn = dataResponse("success", "Success", data || []);
+    DataReturn = dataResponse(200, "success", "Success", data || []);
   } catch (err){
-    DataReturn = dataResponse("fail", err.message);
+    DataReturn = dataResponse(400, "fail", err.message);
   } finally {
     return DataReturn;
   }
@@ -92,9 +89,9 @@ module.exports.getAllUser = async() => {
   let DataReturn = {};
   try {
     const users = await UserRepository.getAllUser();
-    DataReturn = dataResponse("success", "Success", users);
+    DataReturn = dataResponse(200, "success", "Success", users);
   } catch (err){
-    DataReturn = dataResponse("fail", err.message);
+    dataReturn = dataResponse(400, "fail", err.message);
   } finally {
     return DataReturn;
   }
