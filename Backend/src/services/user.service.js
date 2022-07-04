@@ -47,7 +47,8 @@ module.exports.updateUserInfo = async (userId, userData) => {
   let DataReturn = {};
   try {
     const user = await UserRepository.findUserById(userId);
-    if (user.email !== userData.email) throw new Error("Email does not match");
+    if(!user) throw new Error("User does not exist");
+    else if(user.email !== userData.email) throw new Error("Email does not match");
 
     await UserRepository.updateUserById(userId, userData);
     DataReturn = dataResponse("success", "User Updated Successfully");
@@ -62,16 +63,11 @@ module.exports.updateUserPassword = async (userId, userData) => {
   let DataReturn = {};
   try {
     const user = await UserRepository.findUserById(userId);
-    if (!user) throw new Error(`User with id: ${userId} does not exist`);
-
-    if (!Bcrypt.compare(userData.oldPassword, user.password)) throw new Error(`Old Password does not match`);
-
-    const newPasswordHashed = await Bcrypt.encode(userData.newPassword);
-
+    if (!user) throw new Error("User does not exist");
+    else if (!Bcrypt.compare(userData.oldPassword, user.password)) throw new Error("Old Password does not match");
     
-
+    const newPasswordHashed = await Bcrypt.encode(userData.newPassword);
     await UserRepository.updateUserPasswordById(userId, newPasswordHashed);
-
     DataReturn = dataResponse("success", "Update Password Successfully");
   } catch (err) {
     DataReturn = dataResponse("fail", err.message);
@@ -80,7 +76,7 @@ module.exports.updateUserPassword = async (userId, userData) => {
   }
 };
 
-module.exports.viewUsersWithTask = async () => {
+module.exports.viewUsersWithTask = async() => {
   let DataReturn = {};
   try {
     const data = await UserRepository.findUsersWithTaskById();
@@ -98,7 +94,7 @@ module.exports.getAllUser = async() => {
     const users = await UserRepository.getAllUser();
     DataReturn = dataResponse("success", "Success", users);
   } catch (err){
-    dataReturn = dataResponse("fail", err.message);
+    DataReturn = dataResponse("fail", err.message);
   } finally {
     return DataReturn;
   }
