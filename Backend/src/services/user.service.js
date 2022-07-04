@@ -77,9 +77,10 @@ module.exports.updateUserPassword = async (userId, userData) => {
 module.exports.viewUsersWithTask = async() => {
   let DataReturn = {};
   try {
-    const data = await UserRepository.findUsersWithTaskById();    
+    const data = await UserRepository.findUsersWithTaskById();   
+    if(data.id = 1) data.shift();
+    console.log(data)
     data.forEach(element => {
-      if(element.id = 1) data.shift();
       element.id = element.id.toString();
       element.tasks.forEach(ele => {
         ele.dataValues.id = ele.dataValues.id.toString();
