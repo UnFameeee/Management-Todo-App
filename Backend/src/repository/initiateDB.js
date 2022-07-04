@@ -17,20 +17,11 @@ const initalize = function() {
     async (err, results) => {
       results ? console.log(`Create Database ${dbConfig.DB} complete!`) : console.log(err);
 
-      Users.hasMany(Tasks, {
-        foreignKey: "userId",
-        as: "tasks",
-      });
+      Users.hasMany(Tasks, { foreignKey: "userId", as: "tasks" });
       Tasks.belongsTo(Users);
 
-      Users.hasMany(Logs, {
-        foreignKey: "UserUpdate",
-        as: "logs",
-      });
-      Tasks.hasMany(Logs, {
-        foreignKey: "TaskId",
-        as: "logs",
-      });
+      Users.hasMany(Logs, { foreignKey: "userUpdate", as: "logs" });
+      Tasks.hasMany(Logs, { foreignKey: "taskId", as: "logs" });
 
       
 

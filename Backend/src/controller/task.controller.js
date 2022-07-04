@@ -28,10 +28,15 @@ module.exports.updateData = async(req, res) => {
     if (isNaN(req.params.id)) throw new Error('Id not recognize');
     const taskId = parseInt(req.params.id);
     const taskData = req.body;
-    dataReturn = await TaskService.updateData(taskId, taskData)
+    const user = req.user;
+    const dataReturn = await TaskService.updateData({
+      id: user.id, 
+      username: user.username
+    }, taskId, taskData)
   }catch(err){
     dataReturn = dataResponse(400, 'fail', err.message);
   }
+
   res.status(dataReturn.statusCode).json(dataReturn.data);
 }
 

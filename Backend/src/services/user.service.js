@@ -1,6 +1,7 @@
+const LogService = require("./log.service");
+const Bcrypt = require("../utils/bcrypt.utils");
 const UserRepository = require("../repository/user.repository");
 const dataResponse = require("../utils/dataResponse.utils");
-const Bcrypt = require("../utils/bcrypt.utils")
 
 module.exports.addUser = async (userData) => {
   let DataReturn = {};
@@ -15,6 +16,8 @@ module.exports.addUser = async (userData) => {
     };
     await UserRepository.createNewUser(newUser);
 
+    await LogService.createLog(newUser.id, {info: `Create user with email ${newUser.email} successfully`});
+
     DataReturn = dataResponse(201, "success", "Create Successfully", newUser);
 
   } catch (err) {
@@ -28,12 +31,15 @@ module.exports.checkUser = async (userData) => {
   let DataReturn = {};
   try {
     const user = await UserRepository.findUserByEmail(userData.email);
-
     if (!user) throw new Error(`Not found User with email ${userData.email}`);
 
     if (!await Bcrypt.compare(userData.password, user.password)) throw new Error("Password does not match");
 
     DataReturn = dataResponse(201, "success", "Correct", user);
+
+    await LogService.createLog(user.id, {
+      info: `User ${user.username} login to system`
+    })
   } catch (err) {
     DataReturn = dataResponse(400, "fail", err.message);
   } finally {
@@ -50,6 +56,11 @@ module.exports.updateUserInfo = async (userId, userData) => {
 
     await UserRepository.updateUserById(userId, userData);
     DataReturn = dataResponse(201, "success", "User Updated Successfully");
+
+    await LogService.createLog(user.id, {
+      info: `User ${user.username} update info`
+    })
+
   } catch (err) {
     DataReturn = dataResponse(400, "fail", err.message)
   } finally {
@@ -67,6 +78,10 @@ module.exports.updateUserPassword = async (userId, userData) => {
     const newPasswordHashed = await Bcrypt.encode(userData.newPassword);
     await UserRepository.updateUserPasswordById(userId, newPasswordHashed);
     DataReturn = dataResponse(201, "success", "Update Password Successfully");
+
+    await LogService.createLog(user.id, {
+      info: `User ${user.username} update password`
+    })
   } catch (err) {
     DataReturn = dataResponse(400, "fail", err.message);
   } finally {
