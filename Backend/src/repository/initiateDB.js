@@ -4,6 +4,7 @@ const dbConfig = require("../config/database.config.js");
 const Users = require("../models/user.model");
 const Tasks = require("../models/task.model");
 const Logs = require("../models/log.model");
+const User = require("../models/user.model");
 
 const initalize = function() {
   const connection = mysql.createConnection({
@@ -13,7 +14,7 @@ const initalize = function() {
   });
   connection.query(
     `CREATE DATABASE IF NOT EXISTS \`${dbConfig.DB}\`;`,
-    (err, results) => {
+    async (err, results) => {
       results ? console.log(`Create Database ${dbConfig.DB} complete!`) : console.log(err);
 
       Users.hasMany(Tasks, { foreignKey: "userId", as: "tasks" });
@@ -22,7 +23,11 @@ const initalize = function() {
       Users.hasMany(Logs, { foreignKey: "userUpdate", as: "logs" });
       Tasks.hasMany(Logs, { foreignKey: "taskId", as: "logs" });
 
-      sequelize.sync();
+      
+
+      await sequelize.sync();
+
+      // await User.create({username: "admin", password: ""})
     }
   );
   connection.end();

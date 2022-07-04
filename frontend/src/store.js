@@ -15,12 +15,15 @@ from './behaviors/reducers/user'
 import {
     adminAddTaskAction,
     getAllTasksNotAssingedAction,
+    getAllTasksAssingedAction,
+
 }
 from './behaviors/actions/admin'
 
 import {
     adminAddTaskReducer,
     getAllTasksNotAssingedReducer,
+    getAllTasksAssingedReducer,
     
 }
 from './behaviors/reducers/admin'
@@ -30,6 +33,7 @@ const reducers = combineReducers({
     registerAccountReducer,
     adminAddTaskReducer,
     getAllTasksNotAssingedReducer,
+    getAllTasksAssingedReducer,
 })
 
 const middleware = [thunk]

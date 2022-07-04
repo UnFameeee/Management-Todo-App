@@ -19,6 +19,7 @@ module.exports.addUser = async (userData) => {
     await LogService.createLog(newUser.id, {info: `Create user with email ${newUser.email} successfully`});
 
     DataReturn = dataResponse(201, "success", "Create Successfully", newUser);
+
   } catch (err) {
     DataReturn = dataResponse(400, "fail", err.message);
   } finally {
@@ -91,7 +92,15 @@ module.exports.updateUserPassword = async (userId, userData) => {
 module.exports.viewUsersWithTask = async() => {
   let DataReturn = {};
   try {
-    const data = await UserRepository.findUsersWithTaskById();
+    const data = await UserRepository.findUsersWithTaskById();   
+    if(data.id = 1) data.shift();
+    console.log(data)
+    data.forEach(element => {
+      element.id = element.id.toString();
+      element.tasks.forEach(ele => {
+        ele.dataValues.id = ele.dataValues.id.toString();
+      })
+    });
     DataReturn = dataResponse(200, "success", "Success", data || []);
   } catch (err){
     DataReturn = dataResponse(400, "fail", err.message);
@@ -106,7 +115,21 @@ module.exports.getAllUser = async() => {
     const users = await UserRepository.getAllUser();
     DataReturn = dataResponse(200, "success", "Success", users);
   } catch (err){
-    dataReturn = dataResponse(400, "fail", err.message);
+    DataReturn = dataResponse(400, "fail", err.message);
+  } finally {
+    return DataReturn;
+  }
+}
+
+module.exports.getUserInfo = async(userId) => {
+  let DataReturn = {};
+  try{
+    const user = await UserRepository.findUserById(userId);
+    if(!user) throw new Error("User does not exist");
+    console.log(user);
+    DataReturn = dataResponse(200, "success", "Success", user);
+  }catch (err){
+    DataReturn = dataResponse(400, "fail", err.message);
   } finally {
     return DataReturn;
   }

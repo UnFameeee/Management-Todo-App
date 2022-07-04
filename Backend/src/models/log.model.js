@@ -10,8 +10,6 @@ const Log = sequelize.define("log", {
   info: {
     type: Sequelize.STRING,
   }
-}, {
-  updatedAt: false
-});
+}, {updatedAt: false});
 
 module.exports = Log;
