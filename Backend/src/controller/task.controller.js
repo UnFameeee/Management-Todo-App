@@ -29,10 +29,11 @@ module.exports.updateData = async(req, res) => {
     const taskId = parseInt(req.params.id);
     const taskData = req.body;
     const user = req.user;
-    const dataReturn = await TaskService.updateData({
+    const data = await TaskService.updateData({
       id: user.id, 
       username: user.username
     }, taskId, taskData)
+    dataReturn  = dataResponse(200, 'success', 'Update Success', data);
   }catch(err){
     dataReturn = dataResponse(400, 'fail', err.message);
   }

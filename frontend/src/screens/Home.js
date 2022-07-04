@@ -52,11 +52,11 @@ export default function Home() {
   }, [TasksAssigned]);
 
   const roleData = localStorage.getItem("RoleData");
-  useEffect(() => {
-    if (!roleData) {
-      window.location.replace("/forbiden");
-    }
-  }, [roleData]);
+  // useEffect(() => {
+  //   if (!roleData) {
+  //     window.location.replace("/forbiden");
+  //   }
+  // }, [roleData]);
 
   function onDragEnd(val) {
     /// A different way!

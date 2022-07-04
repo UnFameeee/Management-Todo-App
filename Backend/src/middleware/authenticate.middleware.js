@@ -10,12 +10,13 @@ exports.isAuthenticatedUser = async (req, res, next) => {
     }
     else {
       const accessToken = token.split(' ')[1];
-      jwt.verify(accessToken, process.env.JWT_SECRET, async (err, data) =>{
+      console.log("access Token", accessToken);
+      jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, async (err, data) =>{
         if(err) {
           res.status(403).json("Token is not valid");
         }
         else {
-          req.user = await UserRepository.findById(parseInt(data.id));
+          req.user = await UserRepository.findUserById(parseInt(data.id));
           next();
         }
       })
