@@ -1,8 +1,11 @@
-const dataReturn = (status, message, data) => {
+const dataReturn = (statusCode, status, message, data) => {
     return {
-        status: status,
-        message: message,
-        data: data
+        statusCode: statusCode, 
+        data: {
+            status: status,
+            message: message,
+            data: data
+        }
     }
 }
 
