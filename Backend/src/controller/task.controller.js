@@ -18,7 +18,6 @@ module.exports.updateTaskOwner = async(req, res) => {
   catch(err){
     dataReturn = dataResponse(400, 'fail', err.message);
   }
-  console.log(dataReturn)
   res.status(dataReturn.statusCode).json(dataReturn.data);
 }
 

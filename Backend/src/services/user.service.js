@@ -128,7 +128,6 @@ module.exports.getUserInfo = async (userId) => {
   try {
     const user = await UserRepository.findUserById(userId);
     if (!user) throw new Error("User does not exist");
-    console.log(user);
     DataReturn = dataResponse(200, "success", "Success", user);
   } catch (err) {
     DataReturn = dataResponse(400, "fail", err.message);
