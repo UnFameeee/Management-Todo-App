@@ -1,7 +1,7 @@
 import { DragDropContext } from "react-beautiful-dnd";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllTasksNotAssingedAction, getAllTasksAssingedAction } from "../behaviors/actions/admin";
+import { getAllTasksNotAssingedAction, getAllTasksAssingedAction  } from "../behaviors/actions/admin";
 import Column from "./common/Column";
 
 export default function Home() {
@@ -19,27 +19,37 @@ export default function Home() {
   );
   const { success, loadingGetAllTasksNotAssigned, TasksNotAssigned } =
     getAllTasksNotAssingedReducer;
-    
-  useEffect(() => {
-    if (TasksNotAssigned) {
-      initialState[0].tasks = TasksNotAssigned.data;
-      setTasks(initialState);
-      return;
-    }
-    dispatch(getAllTasksNotAssingedAction());  
-  }, [TasksNotAssigned]);
 
   const getAllTasksAssingedReducer = useSelector(
     (state) => state.getAllTasksAssingedReducer
   );
   const { getTaskSuccess, loadingGetAllTasksAssigned, TasksAssigned } =
-    getAllTasksAssingedReducer;
-    
-  useEffect(() => {  
-    dispatch(getAllTasksAssingedAction());  
+    getAllTasksAssingedReducer; 
+
+  let initialState = [
+    {
+      name: "Task",
+      tasks: [],
+    },
+  ];   
+
+  const [taskList, setTasks] = useState(initialState);
+
+  useEffect(() => {
+    dispatch(getAllTasksNotAssingedAction());
   }, []);
 
-  
+  useEffect(() => {
+    if(TasksAssigned) {
+      if(TasksNotAssigned) initialState[0].tasks = TasksNotAssigned.data
+      for(let i=0;i<TasksAssigned.data.length; i++){
+        initialState.push(TasksAssigned.data[i]);
+      }
+      setTasks(initialState)
+      return;
+    }
+    dispatch(getAllTasksAssingedAction());
+  }, [TasksAssigned]);
 
   const roleData = localStorage.getItem("RoleData");
   useEffect(() => {
@@ -48,21 +58,12 @@ export default function Home() {
     }
   }, [roleData]);
 
-  let initialState = [
-    {
-      name: "Task",
-      tasks: [],
-    },
-  ];
-
-  const [taskList, setTasks] = useState(initialState);
-
   function onDragEnd(val) {
     /// A different way!
     const { draggableId, source, destination } = val;
 
     const [sourceGroup] = taskList.filter(
-      (column) => column.groupName === source.droppableId
+      (column) => column.name === source.droppableId
     );
 
     // Destination might be `null`: when a task is
@@ -70,7 +71,7 @@ export default function Home() {
     // task reamins in the same column so `destination` is same as `source`
     const [destinationGroup] = destination
       ? taskList.filter(
-          (column) => column.groupName === destination.droppableId
+          (column) => column.name === destination.droppableId
         )
       : { ...sourceGroup };
 
@@ -87,15 +88,15 @@ export default function Home() {
     // Mapping over the task lists means that you can easily
     // add new columns
     const newTaskList = taskList.map((column) => {
-      if (column.groupName === source.groupName) {
+      if (column.name === source.name) {
         return {
-          groupName: column.groupName,
+          name: column.name,
           tasks: newSourceGroupTasks,
         };
       }
-      if (column.groupName === destination.groupName) {
+      if (column.name === destination.name) {
         return {
-          groupName: column.groupName,
+          name: column.name,
           tasks: newDestinationGroupTasks,
         };
       }
@@ -103,14 +104,7 @@ export default function Home() {
     });
     setTasks(newTaskList);
   }
-  
-  if(TasksAssigned) {
-    for(let i = 0; i < TasksAssigned.data.length; i++)
-    {
-      initialState.push(TasksAssigned.data[i])
-    }
-    console.log(initialState);
-  }
+
   return (
     <>
       <div className="mainpage">

@@ -4,7 +4,7 @@ import Task from "./Task";
 
 export default function Column(props) {
     const { droppableId, list, type } = props;
-    console.log("type = ", droppableId, list.map(v => v.id));
+    
     return (
         <Droppable droppableId={droppableId} type={type}>
             {provided => (

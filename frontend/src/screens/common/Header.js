@@ -22,12 +22,16 @@ const removeRole = () =>{
   localStorage.removeItem('RoleData')
 }
 
+function handleClickedHomepage() {
+  window.location.replace('/home')
+}
+
 export default function Header() {
   return (
     <>
-      <div className="header">
+      <div className="header-wrapper">
         <div className="div-2">
-          <div className="div-3">
+          <div className="div-3" onClick={handleClickedHomepage}>
             <div className="div-4">
               <picture>
                 <img
@@ -102,7 +106,7 @@ export default function Header() {
         </div>
       </div>
       <style>{`
-        .header {
+        .header-wrapper {
           display: flex;
           flex-direction: column;
           justify-content: flex-start;
@@ -118,6 +122,7 @@ export default function Header() {
           background-color: black;
         }
         .div-3 {
+          cursor: pointer;
           display: flex;
           flex-direction: row;
           max-width: 167px;
