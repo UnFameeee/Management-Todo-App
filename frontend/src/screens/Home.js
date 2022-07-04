@@ -1,4 +1,4 @@
-import { DragDropContext } from "react-beautiful-dnd"
+import { DragDropContext } from "react-beautiful-dnd";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTasksNotAssingedAction } from "../behaviors/actions/admin";
@@ -10,29 +10,36 @@ export default function Home() {
   // get avatar from file
   const onImageChange = (e) => {
     const [file] = e.target.files;
-    setImageURL(URL.createObjectURL(file)); 
-  }; 
+    setImageURL(URL.createObjectURL(file));
+  };
 
   const dispatch = useDispatch();
-  const getAllTasksNotAssingedReducer = useSelector((state) => state.getAllTasksNotAssingedReducer);
-  const { success, loadingGetAllTasksNotAssigned, userWithTasks } = getAllTasksNotAssingedReducer;
+  const getAllTasksNotAssingedReducer = useSelector(
+    (state) => state.getAllTasksNotAssingedReducer
+  );
+  const { success, loadingGetAllTasksNotAssigned, userWithTasks } =
+    getAllTasksNotAssingedReducer;
 
   useEffect(() => {
-    dispatch(getAllTasksNotAssingedAction())
+    dispatch(getAllTasksNotAssingedAction());
   }, []);
-  
+  const roleData = localStorage.getItem("RoleData");
+  useEffect(() => {
+    if (!roleData) {
+      window.location.replace("/forbiden");
+    }
+  }, [roleData]);
 
   let initialState = [
     {
-      groupName: 'Task',
-      tasks: []
+      groupName: "Task",
+      tasks: [],
     },
-  ]
+  ];
 
-  
   const [taskList, setTasks] = useState(initialState);
-  
-  if(userWithTasks) {
+
+  if (userWithTasks) {
     initialState[0].tasks = userWithTasks.data;
   }
   function onDragEnd(val) {
@@ -40,18 +47,20 @@ export default function Home() {
     const { draggableId, source, destination } = val;
 
     const [sourceGroup] = taskList.filter(
-      column => column.groupName === source.droppableId
+      (column) => column.groupName === source.droppableId
     );
 
     // Destination might be `null`: when a task is
     // dropped outside any drop area. In this case the
     // task reamins in the same column so `destination` is same as `source`
     const [destinationGroup] = destination
-      ? taskList.filter(column => column.groupName === destination.droppableId)
+      ? taskList.filter(
+          (column) => column.groupName === destination.droppableId
+        )
       : { ...sourceGroup };
 
     // We save the task we are moving
-    const [movingTask] = sourceGroup.tasks.filter(t => t.id === draggableId);
+    const [movingTask] = sourceGroup.tasks.filter((t) => t.id === draggableId);
 
     const newSourceGroupTasks = sourceGroup.tasks.splice(source.index, 1);
     const newDestinationGroupTasks = destinationGroup.tasks.splice(
@@ -62,23 +71,24 @@ export default function Home() {
 
     // Mapping over the task lists means that you can easily
     // add new columns
-    const newTaskList = taskList.map(column => {
+    const newTaskList = taskList.map((column) => {
       if (column.groupName === source.groupName) {
         return {
           groupName: column.groupName,
-          tasks: newSourceGroupTasks
+          tasks: newSourceGroupTasks,
         };
       }
       if (column.groupName === destination.groupName) {
         return {
           groupName: column.groupName,
-          tasks: newDestinationGroupTasks
+          tasks: newDestinationGroupTasks,
         };
       }
       return column;
     });
     setTasks(newTaskList);
   }
+
   return (
     <>
       <div className="mainpage">
@@ -145,17 +155,18 @@ export default function Home() {
             </div>
           </div>
           <button className="add-task">Create Task</button>
-          <div className="manage">            
+          <div className="manage">
             <DragDropContext onDragEnd={onDragEnd}>
-              {taskList && taskList.map((task) => (
-                <Column
-                key={task.groupName}
-                className="column"
-                droppableId={task.groupName}
-                list={task.tasks}
-                type="TASK"
-                />
-              ))}
+              {taskList &&
+                taskList.map((task) => (
+                  <Column
+                    key={task.groupName}
+                    className="column"
+                    droppableId={task.groupName}
+                    list={task.tasks}
+                    type="TASK"
+                  />
+                ))}
             </DragDropContext>
           </div>
         </div>
@@ -163,9 +174,24 @@ export default function Home() {
         <div className="right">
           <div className="user-avt">
             <div className="browse-box">
-              <input className="browse-file-input" type="file" onChange={(e) => {onImageChange(e)}}/>
+              <input
+                className="browse-file-input"
+                type="file"
+                onChange={(e) => {
+                  onImageChange(e);
+                }}
+              />
             </div>
-            {imageURL && <img src={imageURL} style={{overflow:'hidden', borderRadius:'50%', objectFit:'contain'}}></img>}
+            {imageURL && (
+              <img
+                src={imageURL}
+                style={{
+                  overflow: "hidden",
+                  borderRadius: "50%",
+                  objectFit: "contain",
+                }}
+              ></img>
+            )}
           </div>
           <div className="user">
             <div className="user-info">
@@ -180,7 +206,7 @@ export default function Home() {
           <button>Change</button>
         </div>
       </div>
-        <style>{`
+      <style>{`
           .mainpage {
             display: flex;
             min-height: 663px;     
@@ -449,5 +475,5 @@ export default function Home() {
           }
         `}</style>
     </>
-  )
+  );
 }
