@@ -76,18 +76,9 @@ module.exports.updateOwner = async(taskId, data) => {
 module.exports.getNewTasks = async() => {
   let DataReturn = {};
   const data  = await TaskRepository.getNewTasks();
+  data.forEach(element => {
+    element.dataValues.id = element.dataValues.id.toString();
+  });
   DataReturn = dataResponse(200, 'success', 'Get success', data);
   return DataReturn;
 }
-
-// module.exports.archivedTask = async (taskId) => {
-//   let DataReturn = {};
-//   try{
-//     const task = await TaskRepository.archivedTaskById(taskId);
-//     DataReturn = dataResponse('success', 'Data Response', task);
-//   }
-//   catch(err){
-//     DataReturn = dataResponse('fail', err.message);
-//   }
-//   return DataReturn;
-// }
