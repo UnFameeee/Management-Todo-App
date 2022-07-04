@@ -4,7 +4,7 @@ export default function Task(props) {
     const { id, index, title } = props;
 
     return (
-       <Draggable draggableId={id} index={index} type="TASK">
+       <Draggable draggableId={id.toString()} index={index} type="TASK">
             {provided => (
                 <li
                 ref={provided.innerRef}
