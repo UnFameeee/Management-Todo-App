@@ -1,24 +1,24 @@
 const { validationResult } = require("express-validator");
 
 module.exports.exception = (error, req, res, next) => {
-  console.log("Error middleware");
-  const status = error.statusCode || 500;
+  const statusCode = error.statusCode || 500;
+  const status = error.status;
   const message = error.message;
   const data = error.data;
-  res.status(status).json({ message: message, data: data });
+  res.status(statusCode).json({ status: status, message: message, data: data });
 };
 
 module.exports.handleValidation = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error("Validation failed.");
-    error.statusCode = 422;
-    arrayData = [];
-    error.data = "";
+    const error = new Error();
+    error.status = "fail";
+    error.statusCode = 400;
     errors.errors.forEach(element => {
-      arrayData.push(element.msg);
-    }, error.data = arrayData);
+      error.message += `${element.msg}\n`
+    });
     throw error;
   }
-  next();
+  else 
+    next();
 };
