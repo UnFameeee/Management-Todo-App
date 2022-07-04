@@ -63,10 +63,10 @@ module.exports.updateOwner = async(taskId, data) => {
 
     await TaskRepository.updateTaskOwner(data.userId, taskId);
     const updatedTask = await TaskRepository.findTaskAndUserInfoByTaskId(taskId);
-    DataReturn = dataResponse('success','Task updated successfully', updatedTask);
+    DataReturn = dataResponse("200", 'success','Task updated successfully', updatedTask);
   }
   catch (err){
-    DataReturn = dataResponse('fail', err.message)
+    DataReturn = dataResponse(400, 'fail', err.message)
   }
   finally{
     return DataReturn;
@@ -76,7 +76,7 @@ module.exports.updateOwner = async(taskId, data) => {
 module.exports.getNewTasks = async() => {
   let DataReturn = {};
   const data  = await TaskRepository.getNewTasks();
-  DataReturn = dataResponse('success', 'Get success', data);
+  DataReturn = dataResponse(200, 'success', 'Get success', data);
   return DataReturn;
 }
 

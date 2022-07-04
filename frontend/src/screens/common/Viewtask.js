@@ -197,7 +197,7 @@ const Body = styled.div`
     }
   }
 `;
-function CreateTask() {
+export default function ViewTask() {
   const [isClicked, setIsClicked] = useState("false");
   const [description, setDescription] = useState("");
   const [isClickedAddMember, setIsClickedAddMember] = useState("false");
@@ -296,5 +296,3 @@ function CreateTask() {
     </Body>
   );
 }
-
-export default Viewtask;
