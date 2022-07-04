@@ -5,6 +5,9 @@ const Users = require("../models/user.model");
 const Tasks = require("../models/task.model");
 const Logs = require("../models/log.model");
 const User = require("../models/user.model");
+const Bcrypt = require("../utils/bcrypt.utils")
+const ROLE = require("../constants/role.constant");
+const UserRepository = require("./user.repository");
 
 const initalize = function() {
   const connection = mysql.createConnection({
@@ -22,12 +25,10 @@ const initalize = function() {
 
       Users.hasMany(Logs, { foreignKey: "userUpdate", as: "logs" });
       Tasks.hasMany(Logs, { foreignKey: "taskId", as: "logs" });
-
-      
-
       await sequelize.sync();
 
-      // await User.create({username: "admin", password: ""})
+      if(!await UserRepository.findUserById(1))
+        await User.create({username: "admin", password: await Bcrypt.encode("admin"), email: "admin@gmail.com", role: ROLE.LEADER})
     }
   );
   connection.end();
