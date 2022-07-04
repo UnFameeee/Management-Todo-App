@@ -27,6 +27,6 @@ module.exports.viewTask = async(req, res) => {
 }
 
 module.exports.getNewTasks = async(req, res) => {
-  const dataReturn = await await TaskService.getNewTasks();
+  const dataReturn = await TaskService.getNewTasks();
   res.status(dataReturn.statusCode).json(dataReturn.data);
 }

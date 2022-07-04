@@ -41,7 +41,9 @@ export default function Home() {
 
   if (userWithTasks) {
     initialState[0].tasks = userWithTasks.data;
+    console.log(initialState)
   }
+  
   function onDragEnd(val) {
     /// A different way!
     const { draggableId, source, destination } = val;
