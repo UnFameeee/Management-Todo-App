@@ -18,14 +18,6 @@ const {
   refreshTheToken,
 } = require("../controller/user.controller");
 
-// router.post("/register", register);
-// router.route("/login").post(login);
-// router.route("/update-info/:id").put(updateUserInfo);
-// router.route("/:id/password/change").put(updatePassword);
-// router.route("/viewTask").get(viewUsersWithTask);
-// router.route("").get(getAllUser);
-// router.route("/:id").get(getUserInfo);
-
 router.route("/register").post([
   body("email")
     .isEmail()

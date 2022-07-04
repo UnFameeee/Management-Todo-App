@@ -2,33 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 Promise.resolve(require('./repository/initiateDB').initalize());
- 
-const swaggerUI = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");  
+
 const { exception } = require("./middleware/validation.middleware");
 const apiRoute = require("./routes/router")
 
-
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Task App API",
-      version: "1.0.0",
-      description: "A simple Express Library API"
-    },
-    server: [
-      { url: "http://localhost:3000/api/v1" }
-    ]
-  },
-  apis: ["./src/routes/*.js"]
-}
-
-const specs = swaggerJsDoc(options)
-
 const app = express();
-
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
 
 app.use(cors());
 app.use(express.json());
