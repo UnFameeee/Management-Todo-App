@@ -41,7 +41,7 @@ module.exports.checkUser = async (userData) => {
       info: `User ${user.username} login to system`
     })
   } catch (err) {
-    DataReturn = dataResponse(400, "fail", err.message);
+    DataReturn = dataResponse(404, "fail", err.message);
   } finally {
     return DataReturn;
   }
