@@ -7,3 +7,7 @@ module.exports.createLog = async(userId, logInfo) => {
     taskId: logInfo.taskId
   })
 }
+
+module.exports.showLog = async() => {
+  return await Log.findAll();
+}

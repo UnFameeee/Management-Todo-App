@@ -97,7 +97,6 @@ module.exports.viewUsersWithTask = async () => {
   try {
     const data = await UserRepository.findUsersWithTaskById();
     if ((data.id = 1)) data.shift();
-    console.log(data);
     data.forEach((element) => {
       element.id = element.id.toString();
       element.tasks.forEach((ele) => {

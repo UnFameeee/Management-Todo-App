@@ -4,7 +4,6 @@ const UserRepository = require("../repository/user.repository");
 
 exports.isAuthenticatedUser = async (req, res, next) => {
     const token = req.headers.token;
-
     if (!token){
       res.status(401).json("You are not authenticated");
     }
@@ -28,7 +27,6 @@ exports.authorizeUserRole = (...roles) => {
       if (!roles.includes(req.user.role))
         res.status(403).json(`Role (${req.user.role}) is not allowed to access this resource`);
           //return next(new ErrorResponse(`Role (${req.user.role}) is not allowed to access this resource`, 403));
-  
-      next();
+      else next();
   }
 }
