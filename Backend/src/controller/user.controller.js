@@ -10,7 +10,7 @@ module.exports.login = async(req, res) => {
   const dataCreate = req.body;
   const dataReturn = await UserService.checkUser(dataCreate);
   res.status(dataReturn.statusCode).json(dataReturn.data);
-}
+} 
 
 module.exports.updateUserInfo = async(req, res) => {
   const userId = parseInt(req.params.id);
