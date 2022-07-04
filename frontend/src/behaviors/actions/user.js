@@ -49,7 +49,7 @@ export const registerAccountAction = (email,username,password) => async(dispatch
         })
         const config = {
             headers: {
-                'content-type' : 'application/json; charset=utf-8',
+                'content-type' : 'application/json; charset=utf-8'
             }
         }
         const {data} = await axios.post(`${apiUrl}/user/register`,{email,username,password},config)
