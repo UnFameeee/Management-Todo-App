@@ -11,7 +11,19 @@ module.exports.createLog = async(userId, logInfo) => {
     const log = await LogRepository.createLog(userId, logInfo);
     dataReturn = dataResponse(201, 'Success', 'success', log);
   } catch (err) {
-    dataReturn = dataRespons(400, 'Fail', `Cann't create`);
+    dataReturn = dataResponse(400, 'Fail', `Cann't create`);
+  } finally {
+    return dataReturn;
+  }
+}
+
+module.exports.showLog = async() => {
+  let dataReturn = {};
+  try {
+    const log = await LogRepository.showLog();
+    dataReturn = dataResponse(201, 'Success', 'success', log);
+  } catch (err) {
+    dataReturn = dataResponse(400, 'Fail', `Cann't create`);
   } finally {
     return dataReturn;
   }

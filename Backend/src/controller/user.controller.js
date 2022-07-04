@@ -1,6 +1,4 @@
-const { validationResult } = require("express-validator");
 const UserService = require("../services/user.service");
-const ErrorResponse = require("../utils/errorResponse.utils");
 const JWTToken = require('../utils/JWTToken.utils');
 
 const jwt = require('jsonwebtoken');
@@ -16,7 +14,6 @@ module.exports.register = async (req, res, next) => {
 module.exports.login = async(req, res) => {
   let accessToken = "";
   let refreshToken = "";
-  
   const dataLogin = req.body;
   const dataReturn = await UserService.checkUser(dataLogin);
 

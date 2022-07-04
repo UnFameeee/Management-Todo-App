@@ -96,8 +96,7 @@ module.exports.viewUsersWithTask = async () => {
   let DataReturn = {};
   try {
     const data = await UserRepository.findUsersWithTaskById();
-    if ((data.id = 1)) data.shift();
-    console.log(data);
+    if ((data.id === 1)) data.shift();
     data.forEach((element) => {
       element.id = element.id.toString();
       element.tasks.forEach((ele) => {
@@ -129,7 +128,6 @@ module.exports.getUserInfo = async (userId) => {
   try {
     const user = await UserRepository.findUserById(userId);
     if (!user) throw new Error("User does not exist");
-    console.log(user);
     DataReturn = dataResponse(200, "success", "Success", user);
   } catch (err) {
     DataReturn = dataResponse(400, "fail", err.message);

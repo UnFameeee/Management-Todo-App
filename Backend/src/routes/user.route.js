@@ -18,16 +18,7 @@ const {
   refreshTheToken,
 } = require("../controller/user.controller");
 
-// router.post("/register", register);
-// router.route("/login").post(login);
-// router.route("/update-info/:id").put(updateUserInfo);
-// router.route("/:id/password/change").put(updatePassword);
-// router.route("/viewTask").get(viewUsersWithTask);
-// router.route("").get(getAllUser);
-// router.route("/:id").get(getUserInfo);
-
-router.post("/register",
-[
+router.route("/register").post([
   body("email")
     .isEmail()
     .withMessage("lmao")
@@ -42,16 +33,33 @@ router.post("/register",
     .trim()
     .isLength({ min: 8 })
     .withMessage("Username's length must be longer than 8"),
-],
-handleValidation, register);
+],handleValidation, register);
+
 router.route("/login").post(login);
-router.route("/update-info/:id").put(isAuthenticatedUser, updateUserInfo);
-router.route("/:id/password/change").put(isAuthenticatedUser, updatePassword);
+
+router.route("/update-info/:id").put([
+  param("id")
+    .matches(/^[0-9]+$/)
+    .withMessage("Id does not exist"),
+], handleValidation, isAuthenticatedUser, updateUserInfo);
+
+router.route("/:id/password/change").put([
+  param("id")
+    .matches(/^[0-9]+$/)
+    .withMessage("Id does not exist"),
+], handleValidation, isAuthenticatedUser, updatePassword);
+
+
 router.route("/viewTask").get(isAuthenticatedUser, viewUsersWithTask);
-router
-  .route("")
-  .get(isAuthenticatedUser, authorizeUserRole("leader"), getAllUser);
-router.route("/:id").get(isAuthenticatedUser, getUserInfo);
+
+router.route("").get(isAuthenticatedUser, authorizeUserRole("leader"), getAllUser);
+
+router.route("/:id").get([
+  param("id")
+    .matches(/^[0-9]+$/)
+    .withMessage("Id does not exist"),
+], handleValidation, isAuthenticatedUser, getUserInfo);
+
 router.route("/refreshToken").post(refreshTheToken);
 
 module.exports = router;
