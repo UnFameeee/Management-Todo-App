@@ -94,7 +94,21 @@ module.exports.getAllUser = async() => {
     const users = await UserRepository.getAllUser();
     DataReturn = dataResponse(200, "success", "Success", users);
   } catch (err){
-    dataReturn = dataResponse(400, "fail", err.message);
+    DataReturn = dataResponse(400, "fail", err.message);
+  } finally {
+    return DataReturn;
+  }
+}
+
+module.exports.getUserInfo = async(userId) => {
+  let DataReturn = {};
+  try{
+    const user = await UserRepository.findUserById(userId);
+    if(!user) throw new Error("User does not exist");
+    console.log(user);
+    DataReturn = dataResponse(200, "success", "Success", user);
+  }catch (err){
+    DataReturn = dataResponse(400, "fail", err.message);
   } finally {
     return DataReturn;
   }

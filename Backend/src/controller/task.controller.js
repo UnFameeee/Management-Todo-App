@@ -23,15 +23,27 @@ module.exports.updateTaskOwner = async(req, res) => {
 }
 
 module.exports.updateData = async(req, res) => {
-  const taskId = parseInt(req.params.id);
-  const taskData = req.body;
-  const dataReturn = await TaskService.updateData(taskId, taskData)
+  let dataReturn = {};
+  try{
+    if (isNaN(req.params.id)) throw new Error('Id not recognize');
+    const taskId = parseInt(req.params.id);
+    const taskData = req.body;
+    dataReturn = await TaskService.updateData(taskId, taskData)
+  }catch(err){
+    dataReturn = dataResponse(400, 'fail', err.message);
+  }
   res.status(dataReturn.statusCode).json(dataReturn.data);
 }
 
 module.exports.viewTask = async(req, res) => {
-  const taskId = parseInt(req.params.id);
-  const dataReturn = await TaskService.viewTask(taskId)
+  let dataReturn = {};
+  try{
+    if (isNaN(req.params.id)) throw new Error('Id not recognize');
+    const taskId = parseInt(req.params.id);
+    dataReturn = await TaskService.viewTask(taskId)
+  }catch(err){
+    dataReturn = dataResponse(400, 'fail', err.message);
+  }
   res.status(dataReturn.statusCode).json(dataReturn.data);
 }
 
