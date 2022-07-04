@@ -20,6 +20,8 @@ import {
   registerAccountReducer,
 } from "../../behaviors/reducers/user";
 import { checkEmail, alertEmptyField } from "../../common/libs";
+import { loginUser, registerUser } from "../../redux/apiRequest";
+import { registerStart } from "../../redux/authSlice";
 
 const LeftContainer = styled.div`
   width: 70%;
@@ -133,8 +135,8 @@ export default function Login() {
 
   const { email, password, username } = account;
 
-  const loginAccountReducer = useSelector((state) => state.loginAccountReducer);
-  const { success, loadingLoginAccount, error } = loginAccountReducer;
+  // const loginAccountReducer = useSelector((state) => state.loginAccountReducer);
+  // const { success, loadingLoginAccount, error } = loginAccountReducer;
 
   const handleClickMethodLogin = () => {
     setIsLogin((current) => !current);
@@ -153,13 +155,20 @@ export default function Login() {
     });
   };
 
-  const handleClickSubmit = () => {
+  const handleClickSubmit = (e ) => {
+    e.preventDefault()
     if (isLogin) {
       if (!username  || !password) {
         alertEmptyField();
         return;
       }
-      dispatch(loginAccountAction(username, password));
+      const User = {
+        email:username,
+        password:password
+      }
+      console.log(User)
+      loginUser(User,dispatch,navigate)
+      // dispatch(loginAccountAction(username, password));
     } else {
       if (!username || !email || !password) {
         alertEmptyField();
@@ -168,16 +177,22 @@ export default function Login() {
       if (!checkEmail(email)) {
         return;
       }
+      const newUser = {
+        email:email,
+        username:username,
+        password:password
+      }
+      registerUser(newUser,dispatch,navigate)
 
-      dispatch(registerAccountAction(email, username, password));
+      // dispatch(registerAccountAction(email, username, password));
     }
   };
 
-  useEffect(() =>{
-    if(success){
-      window.location.replace('/home')
-    }
-  }, [success])
+  // useEffect(() =>{
+  //   if(success){
+  //     window.location.replace('/home')
+  //   }
+  // }, [success])
 
   return (
     <div
@@ -253,7 +268,7 @@ export default function Login() {
                 onClick={handleClickMethodLogin}
               ></RightlineStyle>
             </DecorLineStyle>
-            <div
+            <form
               className="input-field"
               style={{ marginTop: "10px", width: "100%" }}
             >
@@ -312,7 +327,7 @@ export default function Login() {
                 )}
               </div>
 
-              <ButtonStyle onClick={handleClickSubmit}>
+              <ButtonStyle onClick={(e) => handleClickSubmit(e)}>
                 {isLogin ? "Đăng Nhập" : "Đăng ký"}
               </ButtonStyle>
               <div
@@ -366,7 +381,7 @@ export default function Login() {
                   </div>
                 )}
               </div>
-            </div>
+            </form>
           </div>
         </RightContainer>
       </div>
