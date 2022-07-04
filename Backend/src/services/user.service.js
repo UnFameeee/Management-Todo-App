@@ -77,6 +77,9 @@ module.exports.viewUsersWithTask = async() => {
   let DataReturn = {};
   try {
     const data = await UserRepository.findUsersWithTaskById();
+    data.forEach(element => {
+      element.id = element.id.toString()
+    });
     DataReturn = dataResponse(200, "success", "Success", data || []);
   } catch (err){
     DataReturn = dataResponse(400, "fail", err.message);
