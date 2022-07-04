@@ -18,7 +18,9 @@ const BxShadow = styled.div`
 const TextColor = styled.div`
 
 `;
-
+const removeRole = () =>{
+  localStorage.removeItem('RoleData')
+}
 
 export default function Header() {
   return (
@@ -91,7 +93,7 @@ export default function Header() {
                 <FontAwesomeIcon icon={faClipboardList}/>
                 <span style={{marginLeft:'24px'}}>History</span>
               </Link>
-              <Link to="/login" className="menu-list">
+              <Link to="/login" className="menu-list" onClick={removeRole}>
                 <FontAwesomeIcon icon={faRightFromBracket}/>
                 <span style={{marginLeft:'20px'}}>Log Out</span>
               </Link>

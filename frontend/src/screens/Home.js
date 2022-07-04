@@ -75,8 +75,13 @@ export default function Home() {
     dispatch(getAllTasksNotAssingedAction())
   }, []);
 
+  const authen = localStorage.getItem("RoleData")
   
-
+  useEffect(() =>{
+    if(!authen){
+      window.location.replace('/forbiden')
+    }
+  }, [authen])
   return (
     <>
       <div className="mainpage">

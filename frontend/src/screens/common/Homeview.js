@@ -1,9 +1,12 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Forbiden from "../Forbiden";
 import Home from "../Home";
 import Header from "./Header";
 function HomeView({ homeRoute }) {
-  let body = <div>{homeRoute === "home" && <Home />}</div>;
+  let body = <div>
+  {homeRoute === "home" && <Home />}
+  </div>;
   return (
     <div>
       <Header />

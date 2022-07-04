@@ -20,7 +20,7 @@ export const loginAccountAction = (email, password) => async (dispatch) =>{
         const {data} = await axios.post(`${apiUrl}/user/login`,{email,password})
         console.log(data)
         if(data.status==="success"){
-            localStorage.setItem('AuthData',data)
+            localStorage.setItem('RoleData',data.data.role)
             dispatch({
                 type:LOGIN_ACCOUNT_SUCCESS,
                 payload:data
