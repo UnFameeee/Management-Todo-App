@@ -2,13 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { body, param } = require("express-validator");
 
-const {
-  addTask,
-  updateTaskOwner,
-  updateData,
-  viewTask,
-  getNewTasks,
-} = require("../controller/task.controller");
+const { addTask, updateTaskOwner, updateData, viewTask, getNewTasks } = require('../controller/task.controller')
+const { isAuthenticatedUser, authorizeUserRole } = require('../middleware/authenticate.middleware')
 
 /**
  * @swagger
@@ -44,15 +39,17 @@ router
   .route("/create")
   .post(addTask);
 
+
 router
   .route("/update/:id/user", [
     param("id")
       .matches(/^[0-9]+$/)
       .withMessage("Id does not exist"),
   ])
-  .put(updateTaskOwner);
-router.route("/update/:id").put(updateData);
-router.route("/view/:id").get(viewTask);
-router.route("/newTasks").get(getNewTasks);
+  .put(isAuthenticatedUser, authorizeUserRole('leader'), updateTaskOwner);
+router.route('/create').post(isAuthenticatedUser, authorizeUserRole('leader'), addTask);
+router.route('/update/:id').put(isAuthenticatedUser, updateData);
+router.route('/view/:id').get(isAuthenticatedUser, viewTask);
+router.route('/newTasks').get(isAuthenticatedUser, authorizeUserRole('leader'), getNewTasks);
 
 module.exports = router;
