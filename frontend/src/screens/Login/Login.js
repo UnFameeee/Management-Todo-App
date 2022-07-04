@@ -124,8 +124,7 @@ export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [isSetRemember, setIsSetRemember] = useState(false);
   const [isVisiblePassword, setIsVisiblePassword] = useState(false);
-  const [isPasswordType, setIsPasswordType] = useState("password");
-
+  
   const [account, setAccount] = useState({
     email: "",
     username: "",
@@ -145,11 +144,6 @@ export default function Login() {
   };
   const handleClickVisiblePassword = () => {
     setIsVisiblePassword((current) => !current);
-    if (!isVisiblePassword) {
-      setIsPasswordType("password");
-    } else {
-      setIsPasswordType("text");
-    }
   };
 
   const handleOnChangeInfoAccount = (event) => {
@@ -296,7 +290,7 @@ export default function Login() {
                 </FontAwesomeIconLeftStyle>
                 <InputStyle
                   placeholder="Mật khẩu"
-                  type={isPasswordType}
+                  type={!isVisiblePassword ? "password" :"text"}
                   value={password}
                   name="password"
                   onChange={handleOnChangeInfoAccount}
@@ -304,14 +298,14 @@ export default function Login() {
                 {isVisiblePassword ? (
                   <FontAwesomeIconRightStyle>
                     <FontAwesomeIcon
-                      icon={faEyeSlash}
+                      icon={faEye}
                       onClick={handleClickVisiblePassword}
                     ></FontAwesomeIcon>
                   </FontAwesomeIconRightStyle>
                 ) : (
                   <FontAwesomeIconRightStyle>
                     <FontAwesomeIcon
-                      icon={faEye}
+                      icon={faEyeSlash}
                       onClick={handleClickVisiblePassword}
                     ></FontAwesomeIcon>
                   </FontAwesomeIconRightStyle>

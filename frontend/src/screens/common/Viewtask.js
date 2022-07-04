@@ -201,7 +201,7 @@ function CreateTask() {
   const [isClicked, setIsClicked] = useState("false");
   const [description, setDescription] = useState("");
   const [isClickedAddMember, setIsClickedAddMember] = useState("false");
-  const test = localStorage.getItem("Roledata");
+  const roleData = localStorage.getItem("Roledata");
 
   const handleClickOpenModal = () => {
     setIsClicked((current) => !current);
@@ -284,7 +284,7 @@ function CreateTask() {
             </div>
             <div className="save-button">
               <button className="save">Lưu</button>
-              <button className="archived">Lưu trữ</button>
+              {roleData && <button className="archived">Lưu trữ</button>}
             </div>
           </div>
 
@@ -297,4 +297,4 @@ function CreateTask() {
   );
 }
 
-export default CreateTask;
+export default Viewtask;
