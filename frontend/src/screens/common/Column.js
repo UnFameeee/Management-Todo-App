@@ -1,4 +1,5 @@
 import { Droppable } from "react-beautiful-dnd"
+import { useState } from "react";
 import Task from "./Task";
 
 export default function Column(props) {
@@ -8,10 +9,10 @@ export default function Column(props) {
         <Droppable droppableId={droppableId} type={type}>
             {provided => (
                 <ul {...provided.droppableProps} ref={provided.innerRef}>
-                <h2 style={{margin:'10px 0', color:'white', fontWeight:'700'}}>{droppableId}</h2>
+                <h2 style={{margin:'10px 0', color:'white', fontWeight:'700', pointerEvents:'auto'}}>{droppableId}</h2>
 
                 {list.map((val, index) =>
-                    <Task id={val.id} key={val.id} index={index} title={val.title} />
+                    <Task id={val.id.toString()} key={val.id.toString()} index={index} title={val.title} />
                 )}
 
                 {provided.placeholder}

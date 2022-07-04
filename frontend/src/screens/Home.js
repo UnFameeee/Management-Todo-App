@@ -8,20 +8,33 @@ export default function Home() {
   const [imageURL, setImageURL] = useState(); // user avatar
 
   // get avatar from file
-  const onImageChange = (e) => { 
+  const onImageChange = (e) => {
     const [file] = e.target.files;
     setImageURL(URL.createObjectURL(file)); 
-  };  
+  }; 
+
+  const dispatch = useDispatch();
+  const getAllTasksNotAssingedReducer = useSelector((state) => state.getAllTasksNotAssingedReducer);
+  const { success, loadingGetAllTasksNotAssigned, userWithTasks } = getAllTasksNotAssingedReducer;
+
+  useEffect(() => {
+    dispatch(getAllTasksNotAssingedAction())
+  }, []);
+  
 
   let initialState = [
     {
-      groupName: "Task",
+      groupName: 'Task',
       tasks: []
     },
-  ];
+  ]
 
+  
   const [taskList, setTasks] = useState(initialState);
-
+  
+  if(userWithTasks) {
+    initialState[0].tasks = userWithTasks.data;
+  }
   function onDragEnd(val) {
     /// A different way!
     const { draggableId, source, destination } = val;
@@ -66,17 +79,6 @@ export default function Home() {
     });
     setTasks(newTaskList);
   }
-
-  const dispatch = useDispatch();
-  const getAllTasksNotAssingedReducer = useSelector((state) => state.getAllTasksNotAssingedReducer);
-  const { success, loadingGetAllTasksNotAssigned, userWithTasks } = getAllTasksNotAssingedReducer;
-
-  useEffect(() => {
-    dispatch(getAllTasksNotAssingedAction())
-  }, []);
-
-  
-
   return (
     <>
       <div className="mainpage">
@@ -145,7 +147,7 @@ export default function Home() {
           <button className="add-task">Create Task</button>
           <div className="manage">            
             <DragDropContext onDragEnd={onDragEnd}>
-              {taskList.map((task) => (
+              {taskList && taskList.map((task) => (
                 <Column
                 key={task.groupName}
                 className="column"
