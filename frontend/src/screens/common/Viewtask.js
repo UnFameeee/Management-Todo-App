@@ -10,21 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Body = styled.div`
-  > .center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    button {
-      padding: 10px 20px;
-      background: #eee;
-      color: #111;
-      font-size: 15px;
-      font-weight: 600;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  }
   > #popup {
     position: fixed;
     top: 0px;
@@ -32,7 +17,7 @@ const Body = styled.div`
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
-    display: ${(props) => (props.isClicked ? "none" : "block")};
+    display: ${(props) => (props.isClicked ? "block" : "none")};
 
     .popup-content {
       border-radius: 10px;
@@ -198,14 +183,9 @@ const Body = styled.div`
   }
 `;
 export default function ViewTask(props) {
-  const [isClicked, setIsClicked] = useState("false");
   const [description, setDescription] = useState("");
   const [isClickedAddMember, setIsClickedAddMember] = useState("false");
   const roleData = localStorage.getItem("Roledata");
-
-  const handleClickOpenModal = () => {
-    setIsClicked((current) => !current);
-  };
   const handleClickedAddMember = () => {
     setIsClickedAddMember((current) => !current);
   };
@@ -213,10 +193,7 @@ export default function ViewTask(props) {
     setDescription(event.target.value);
   };
   return (
-    <Body isClicked={isClicked} isClickedAddMember={isClickedAddMember}>
-      <div className="center">
-        <button onClick={handleClickOpenModal}>Open modal</button>
-      </div>
+    <Body isClicked={props.isClicked} isClickedAddMember={isClickedAddMember}>
       <div id="popup">
         <div className="popup-content">
           <div className="popup-header">
@@ -288,7 +265,7 @@ export default function ViewTask(props) {
             </div>
           </div>
 
-          <button onClick={handleClickOpenModal} className="close-popup">
+          <button onClick={() => {props.setIsClicked(!props.isClicked)}} className="close-popup">
             x
           </button>
         </div>

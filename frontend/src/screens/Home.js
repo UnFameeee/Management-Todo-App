@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTasksNotAssingedAction, getAllTasksAssingedAction  } from "../behaviors/actions/admin";
 import Column from "./common/Column";
+import ViewTask from "./common/Viewtask";
 
 export default function Home() {
   const [imageURL, setImageURL] = useState(); // user avatar
@@ -105,6 +106,8 @@ export default function Home() {
     setTasks(newTaskList);
   }
 
+  const [isClicked, setIsClicked] = useState(false);
+  
   return (
     <>
       <div className="mainpage">
@@ -170,7 +173,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <button className="add-task">Create Task</button>
+          <button className="add-task" onClick={() => {setIsClicked(!isClicked)}}>Create Task</button>
           <div className="manage">
             <DragDropContext onDragEnd={onDragEnd}>
               {taskList &&
@@ -221,6 +224,7 @@ export default function Home() {
           </div>
           <button>Change</button>
         </div>
+        {isClicked && <ViewTask setIsClicked={setIsClicked} isClicked={isClicked}/>}
       </div>
       <style>{`
           .mainpage {
