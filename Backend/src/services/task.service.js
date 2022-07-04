@@ -1,5 +1,7 @@
 const TaskRepository = require("../repository/task.repository");
+const UserRepository = require("../repository/user.repository");
 const dataResponse = require("../utils/dataResponse.utils");
+const ErrorResponse = require("../utils/errorResponse.utils");
 
 module.exports.addTask = async (taskData) => {
   let DataReturn = {};
@@ -22,6 +24,8 @@ module.exports.addTask = async (taskData) => {
 module.exports.updateData = async (taskId, taskData) => {
   let DataReturn = {}
   try {
+    const task = await TaskRepository.findTaskById(taskId);
+    if(!task) throw new Error("Task does not exist")
     await TaskRepository.updateTask(taskId, taskData)
     const updatedTask = await TaskRepository.findTaskAndUserInfoByTaskId(taskId);
     DataReturn = dataResponse('success', 'Task updated successfully', updatedTask)
@@ -38,6 +42,7 @@ module.exports.viewTask = async (taskId) => {
   let DataReturn = {};
   try{
     const task = await TaskRepository.findTaskById(taskId);
+    if(!task) throw new Error("Task does not exist")
     DataReturn = dataResponse('success', 'Data Response', task);
   }
   catch(err){
@@ -51,6 +56,11 @@ module.exports.viewTask = async (taskId) => {
 module.exports.updateOwner = async(taskId, data) => {
   let DataReturn = {};  
   try {
+    const task = await TaskRepository.findTaskById(taskId);
+    if(!task) throw new Error("Task does not exist")
+    const user = await UserRepository.findUserById(data.userId);
+    if(!user) throw new Error("User does not exist");
+
     await TaskRepository.updateTaskOwner(data.userId, taskId);
     const updatedTask = await TaskRepository.findTaskAndUserInfoByTaskId(taskId);
     DataReturn = dataResponse('success','Task updated successfully', updatedTask);
