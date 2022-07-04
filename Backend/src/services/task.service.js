@@ -82,3 +82,15 @@ module.exports.getNewTasks = async() => {
   DataReturn = dataResponse(200, 'success', 'Get success', data);
   return DataReturn;
 }
+
+// module.exports.archivedTask = async (taskId) => {
+//   let DataReturn = {};
+//   try{
+//     const task = await TaskRepository.archivedTaskById(taskId);
+//     DataReturn = dataResponse('success', 'Data Response', task);
+//   }
+//   catch(err){
+//     DataReturn = dataResponse('fail', err.message);
+//   }
+//   return DataReturn;
+// }

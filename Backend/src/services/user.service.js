@@ -16,6 +16,7 @@ module.exports.addUser = async (userData) => {
     await UserRepository.createNewUser(newUser);
 
     DataReturn = dataResponse(201, "success", "Create Successfully", newUser);
+
   } catch (err) {
     DataReturn = dataResponse(400, "fail", err.message);
   } finally {
@@ -76,9 +77,13 @@ module.exports.updateUserPassword = async (userId, userData) => {
 module.exports.viewUsersWithTask = async() => {
   let DataReturn = {};
   try {
-    const data = await UserRepository.findUsersWithTaskById();
+    const data = await UserRepository.findUsersWithTaskById();    
     data.forEach(element => {
-      element.id = element.id.toString()
+      if(element.id = 1) data.shift();
+      element.id = element.id.toString();
+      element.tasks.forEach(ele => {
+        ele.dataValues.id = ele.dataValues.id.toString();
+      })
     });
     DataReturn = dataResponse(200, "success", "Success", data || []);
   } catch (err){
