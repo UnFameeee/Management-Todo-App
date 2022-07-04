@@ -7,7 +7,8 @@ const {
   updateUserInfo, 
   updatePassword, 
   viewUsersWithTask,
-  getAllUser
+  getAllUser,
+  getUserInfo
 } = require('../controller/user.controller');
 
 
@@ -18,5 +19,6 @@ router.route('/update-info/:id').put(updateUserInfo);
 router.route('/:id/password/change').put(updatePassword);
 router.route('/viewTask').get(viewUsersWithTask);
 router.route('').get(getAllUser)
+router.route('/:id').get(getUserInfo)
 
 module.exports = router;
