@@ -16,7 +16,11 @@ module.exports.updateTaskOwner = async(req, res) => {
 module.exports.updateData = async(req, res) => {
   const taskId = parseInt(req.params.id);
   const taskData = req.body;
-  const dataReturn = await TaskService.updateData(taskId, taskData)
+  const user = req.user;
+  const dataReturn = await TaskService.updateData({
+    id: user.id, 
+    username: user.username
+  }, taskId, taskData)
   res.status(dataReturn.statusCode).json(dataReturn.data);
 }
 

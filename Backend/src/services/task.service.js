@@ -1,6 +1,8 @@
+const ADMIN_ID = 1;
+const LogService = require("./log.service");
+const dataResponse = require("../utils/dataResponse.utils");
 const TaskRepository = require("../repository/task.repository");
 const UserRepository = require("../repository/user.repository");
-const dataResponse = require("../utils/dataResponse.utils");
 const ErrorResponse = require("../utils/errorResponse.utils");
 
 module.exports.addTask = async (taskData) => {
@@ -8,6 +10,11 @@ module.exports.addTask = async (taskData) => {
   try{
     const newTask = await TaskRepository.createNewTask(taskData)
     DataReturn = dataResponse(201, 'success', 'Task created successfully', newTask);
+
+    LogService.createLog(ADMIN_ID, {
+      info: 'Task created successfully by Admin',
+      taskId: newTask.id,
+    })
   }
   catch(err) {
     const ErrorList = err.errors;
@@ -21,14 +28,21 @@ module.exports.addTask = async (taskData) => {
   }
 }
 
-module.exports.updateData = async (taskId, taskData) => {
+module.exports.updateData = async (user, taskId, taskData) => {
   let DataReturn = {}
   try {
     const task = await TaskRepository.findTaskById(taskId);
+    
     if(!task) throw new Error("Task does not exist")
     await TaskRepository.updateTask(taskId, taskData)
+    
     const updatedTask = await TaskRepository.findTaskAndUserInfoByTaskId(taskId);
     DataReturn = dataResponse(201, 'success', 'Task updated successfully', updatedTask)
+
+    LogService.createLog(user.id, {
+      info: `Update Task information by ${user.username}`,
+      taskId: taskId
+    })
   }
   catch (err){
     DataReturn = dataResponse(400, 'fail', err.message);
@@ -64,6 +78,11 @@ module.exports.updateOwner = async(taskId, data) => {
     await TaskRepository.updateTaskOwner(data.userId, taskId);
     const updatedTask = await TaskRepository.findTaskAndUserInfoByTaskId(taskId);
     DataReturn = dataResponse('success','Task updated successfully', updatedTask);
+    
+    LogService.createLog(ADMIN_ID, {
+      info: "Update Task's owner by Admin",
+      taskId: taskId
+    })
   }
   catch (err){
     DataReturn = dataResponse('fail', err.message)
