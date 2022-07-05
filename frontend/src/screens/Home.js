@@ -1,14 +1,33 @@
 import { DragDropContext } from "react-beautiful-dnd";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllTasksNotAssingedAction, getAllTasksAssingedAction, adminAddTaskAction, adminAssignTaskAction  } from "../behaviors/actions/admin";
+import {
+  getAllTasksNotAssingedAction,
+  getAllTasksAssingedAction,
+  adminAddTaskAction,
+  adminAssignTaskAction,
+} from "../behaviors/actions/admin";
 import Column from "./common/Column";
 import CreateTask from "./common/CreateTask";
-import { getAllTasksNotAssinged, getAllTasksAssinged, adminAssignTask } from "../redux/apiRequest";
+import {
+  getAllTasksNotAssinged,
+  getAllTasksAssinged,
+  adminAssignTask,
+} from "../redux/apiRequest";
 import ViewTask from "./common/Viewtask";
-import { faArrowAltCircleDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowAltCircleDown,
+  faDashboard,
+} from "@fortawesome/free-solid-svg-icons";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.auth.login?.currentUser);
+  if (currentUser === null) {
+    window.location.href = "/forbiden";
+  }
   const [imageURL, setImageURL] = useState(); // user avatar
 
   // get avatar from file
@@ -17,7 +36,6 @@ export default function Home() {
     setImageURL(URL.createObjectURL(file));
   };
 
-  const dispatch = useDispatch();
   // const getAllTasksNotAssingedReducer = useSelector(
   //   (state) => state.getAllTasksNotAssingedReducer
   // );
@@ -26,15 +44,15 @@ export default function Home() {
   // const getAllTasksAssingedReducer = useSelector(
   //   (state) => state.getAllTasksAssingedReducer
   // );
-  // const { TasksAssigned } = getAllTasksAssingedReducer; 
+  // const { TasksAssigned } = getAllTasksAssingedReducer;
 
   let initialState = [
     {
-      id: 'admin',
+      id: "admin",
       name: "Task",
       tasks: [],
     },
-  ];   
+  ];
 
   const [taskList, setTasks] = useState(initialState);
   
@@ -45,42 +63,42 @@ export default function Home() {
 
 
   useEffect(() => {
-    getAllTasksNotAssinged(currentUser.token, dispatch);   
-    getAllTasksAssinged(currentUser.token, dispatch); 
-  },[]);
+    getAllTasksNotAssinged(currentUser.token, dispatch);
+    getAllTasksAssinged(currentUser.token, dispatch);
+  }, []);
 
   useEffect(() => {
-    if(tasksAssinged) {
-      if(tasksNotAssinged) initialState[0].tasks = tasksNotAssinged.data
-      for(let i=0;i<tasksAssinged.data.length;i++){
+    if (tasksAssinged) {
+      if (tasksNotAssinged) initialState[0].tasks = tasksNotAssinged.data;
+      for (let i = 0; i < tasksAssinged.data.length; i++) {
         initialState.push(tasksAssinged.data[i]);
       }
-      setTasks(initialState)
+      setTasks(initialState);
     }
   }, [tasksAssinged, tasksNotAssinged]);
 
-  function deleteElement(array, id){
-    if (id>=array.length) return array;
-    else{
+  function deleteElement(array, id) {
+    if (id >= array.length) return array;
+    else {
       const task = array[id];
-      return array.filter((data)=>{
-        return (data!==task);
-      })
+      return array.filter((data) => {
+        return data !== task;
+      });
     }
   }
 
-  function addElement(array, id, data){
+  function addElement(array, id, data) {
     let newArr = [];
     console.log(id, data);
-    for (let i=0;i<array.length;i++){
+    for (let i = 0; i < array.length; i++) {
       if (i === id) newArr.push(data);
       newArr.push(array[i]);
     }
-    if (id>=array.length) newArr.push(data)
+    if (id >= array.length) newArr.push(data);
     return newArr;
   }
-  
-  async function onDragEnd(val) {    
+
+  async function onDragEnd(val) {
     /// A different way!
     const { draggableId, source, destination } = val;
 
@@ -92,23 +110,31 @@ export default function Home() {
     // dropped outside any drop area. In this case the
     // task reamins in the same column so `destination` is same as `source`
     const [destinationGroup] = destination
-      ? taskList.filter(
-          (column) => column.name === destination.droppableId
-        )
+      ? taskList.filter((column) => column.name === destination.droppableId)
       : { ...sourceGroup };
 
-    if(destinationGroup.id==='admin'|| sourceGroup===destinationGroup) return;
-    
-    await adminAssignTask(currentUser.token, destinationGroup.id, destinationGroup.name, draggableId, dispatch);
+    if (destinationGroup.id === "admin" || sourceGroup === destinationGroup)
+      return;
+
+    await adminAssignTask(
+      currentUser.token,
+      destinationGroup.id,
+      destinationGroup.name,
+      draggableId,
+      dispatch
+    );
 
     // We save the task we are moving
     const [movingTask] = sourceGroup.tasks.filter((t) => t.id === draggableId);
-    
-    
+
     // const newSourceGroupTasks = sourceGroup.tasks.prototype.splice(source.index, 1);
-    const newSourceGroupTasks = deleteElement(sourceGroup.tasks, source.index)
+    const newSourceGroupTasks = deleteElement(sourceGroup.tasks, source.index);
     //const newDestinationGroupTasks = destinationGroup.tasks.splice(destination.index, 0, movingTask);
-    const newDestinationGroupTasks = addElement(destinationGroup.tasks, destination.index, movingTask);
+    const newDestinationGroupTasks = addElement(
+      destinationGroup.tasks,
+      destination.index,
+      movingTask
+    );
 
     // Mapping over the task lists means that you can easily
     // add new columns
@@ -125,7 +151,7 @@ export default function Home() {
           tasks: newDestinationGroupTasks,
         };
       }
-      return column; 
+      return column;
     });
     setTasks(newTaskList);
     getAllTasksAssinged(currentUser.token, dispatch);
@@ -133,15 +159,12 @@ export default function Home() {
   }
 
   function onDragStart(val) {
-    
     const { draggableId, source, destination } = val;
-
   }
 
   const [isCreateClicked, setIsCreateClicked] = useState(false); //popup modals
   const [isViewClicked, setIsViewClicked] = useState(false); //popup modals
   const [taskId, setTaskId] = useState('admin');
-  
   return (
     <>
       <div className="mainpage">
@@ -264,6 +287,7 @@ export default function Home() {
         </div>
         {isCreateClicked && <CreateTask setIsCreateClicked={setIsCreateClicked} isCreateClicked={isCreateClicked}/> }     
         {isViewClicked && <ViewTask setIsViewClicked={setIsViewClicked} isViewClicked={isViewClicked} taskId={taskId} setTaskId={setTaskId}/>}
+
       </div>
       <style>{`
           .mainpage {

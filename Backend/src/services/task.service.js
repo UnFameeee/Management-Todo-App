@@ -3,7 +3,6 @@ const LogService = require("./log.service");
 const dataResponse = require("../utils/dataResponse.utils");
 const TaskRepository = require("../repository/task.repository");
 const UserRepository = require("../repository/user.repository");
-const ErrorResponse = require("../utils/errorResponse.utils");
 
 module.exports.addTask = async (taskData) => {
   let DataReturn = {};
@@ -101,15 +100,3 @@ module.exports.getNewTasks = async() => {
   DataReturn = dataResponse(200, 'success', 'Get success', data);
   return DataReturn;
 }
-
-// module.exports.archivedTask = async (taskId) => {
-//   let DataReturn = {};
-//   try{
-//     const task = await TaskRepository.archivedTaskById(taskId);
-//     DataReturn = dataResponse('success', 'Data Response', task);
-//   }
-//   catch(err){
-//     DataReturn = dataResponse('fail', err.message);
-//   }
-//   return DataReturn;
-// }

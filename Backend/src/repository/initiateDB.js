@@ -22,9 +22,10 @@ const initalize = function() {
 
       Users.hasMany(Tasks, { foreignKey: "userId", as: "tasks" });
       Tasks.belongsTo(Users);
-
+ 
       Users.hasMany(Logs, { foreignKey: "userUpdate", as: "logs" });
       Tasks.hasMany(Logs, { foreignKey: "taskId", as: "logs" });
+      
       await sequelize.sync();
 
       if(!await UserRepository.findUserById(1))

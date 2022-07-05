@@ -1,35 +1,36 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClipboardList, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClipboardList,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { logOut } from "../../redux/apiRequest";
-import { useDispatch } from "react-redux";
+import { getTaskLog, logOut } from "../../redux/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
-const PrimaryColor = styled.div`
-
-`;
+const PrimaryColor = styled.div``;
 
 const BgColor = styled.div`
-    background-color: black;
+  background-color: black;
 `;
 
-const BxShadow = styled.div`
+const BxShadow = styled.div``;
 
-`;
-
-const TextColor = styled.div`
-
-`;
+const TextColor = styled.div``;
 
 function handleClickedHomepage() {
-  window.location.replace('/home')
+  window.location.replace("/home");
 }
 
 export default function Header() {
-  const dispatch = useDispatch(); 
-
-  const logout = () =>{
-    logOut(dispatch)
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.auth.login?.currentUser);
+  const logout = () => {
+    logOut(dispatch);
+  };
+  const gettasklogs = () =>{
+    getTaskLog(currentUser.token,dispatch)
   }
 
   return (
@@ -85,26 +86,28 @@ export default function Header() {
                 </div>
               </div>
               <div className="builder-column column-4">
-              <div className="div-13">
-                <picture>
-                  <img
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca"
-                    srcSet="https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca"
-                    className="image"
-                  />
-                </picture>
+                <div className="div-13">
+                  <picture>
+                    <img
+                      loading="lazy"
+                      src="https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca"
+                      srcSet="https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2FTEMP%2Fb98d12684f034dc1b8113c435835caca"
+                      className="image"
+                    />
+                  </picture>
+                </div>
               </div>
-            </div>         
             </div>
             <div className="header-menu">
-              <Link to="/log" className="menu-list">
-                <FontAwesomeIcon icon={faClipboardList}/>
-                <span style={{marginLeft:'24px'}}>History</span>
-              </Link>
+              {currentUser.data.data.role !== "user" && (
+                <Link to="/log" className="menu-list" onClick={gettasklogs}>
+                  <FontAwesomeIcon icon={faClipboardList} />
+                  <span style={{ marginLeft: "24px" }}>History</span>
+                </Link>
+              )}
               <Link to="/login" className="menu-list" onClick={logout}>
-                <FontAwesomeIcon icon={faRightFromBracket}/>
-                <span style={{marginLeft:'20px'}}>Log Out</span>
+                <FontAwesomeIcon icon={faRightFromBracket} />
+                <span style={{ marginLeft: "20px" }}>Log Out</span>
               </Link>
             </div>
           </div>
