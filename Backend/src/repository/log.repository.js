@@ -10,7 +10,7 @@ module.exports.createLog = async(userId, logInfo) => {
 }
 
 module.exports.showLog = async() => {
-  const dataQueryLog = await sequelize.query("SELECT Logs.id, info, Logs.createdAt, userUpdate, Users.username, Users.email, taskId, title, description, status, isArchived FROM Logs, Tasks, Users WHERE Logs.taskId = Tasks.id AND Users.id = Logs.userUpdate ORDER BY Logs.id");
+  const dataQueryLog = await sequelize.query("select A.id, info, A.createdAt, A.userUpdate, username, email, taskId, title, description, status, isArchived from (select Logs.id, info, Logs.createdAt, Logs.userUpdate, taskId, title, description, status, isArchived from logs left join Tasks on logs.taskId = Tasks.id) as A left join Users on A.userUpdate = Users.id");
 
   return dataQueryLog[0];
 }
