@@ -46,7 +46,7 @@ const taskSlice = createSlice({
             taskLogs:null,
             isFetching:false,
             error:false
-        }
+        },
 
     },
     reducers:{

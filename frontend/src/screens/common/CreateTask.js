@@ -4,7 +4,8 @@ import { adminAddTaskAction } from "../../behaviors/actions/admin";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList, faBriefcase } from "@fortawesome/free-solid-svg-icons";
-import { alertSuccess } from "../../common/libs";
+import { adminAddTask } from "../../redux/apiRequest";
+import { alertSuccessNavigate } from "../../common/libs";
 
 const Body = styled.div`
   svg{
@@ -17,7 +18,7 @@ const Body = styled.div`
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
-    display: ${(props) => (props.isClicked ? "block" : "none")};
+    display: ${(props) => (props.isCreateClicked ? "block" : "none")};
 
     .popup-content {
       overflow: hidden;
@@ -213,21 +214,19 @@ export default function CreateTask(props) {
   const [description, setDescription] = useState("");
   
   const dispatch = useDispatch();
-  const adminAddTaskReducer = useSelector(
-    (state) => state.adminAddTaskReducer
-  );
-  const { success, loadingAddTask, message } = adminAddTaskReducer;
-  
-  if(message) {
-    alertSuccess(title, message, 'home')  
+  const currentUser = useSelector((state) => state.auth.login?.currentUser);
+  const tasksNotAssinged = useSelector((state) => state.task.adminAddTask?.isFetching);
+
+  if(tasksNotAssinged) {
+    alertSuccessNavigate('Task created', `${title} successfully`)
   }
 
-  function handleClickCreateTask() {  
-    dispatch(adminAddTaskAction(title,description))
+  async function handleClickCreateTask() {  
+    await adminAddTask(currentUser.token,title,description,dispatch)
   }
   
   return (
-    <Body isClicked={props.isClicked}>
+    <Body isCreateClicked={props.isCreateClicked}>
       <div id="popup">
         <div className="popup-content">
           <div className="popup-header">
@@ -238,7 +237,7 @@ export default function CreateTask(props) {
           <div className="task">
             <input 
               placeholder="Task title"
-              onChange={(e) => {setTitle(e.target.value)}}
+              onChange={async (e) => {await setTitle(e.target.value)}}
             ></input>
           </div>
 
@@ -251,7 +250,7 @@ export default function CreateTask(props) {
               <textarea
                 placeholder="Task description"
                 value={description}
-                onChange={(e) => {setDescription(e.target.value)}}
+                onChange={async (e) => {await setDescription(e.target.value)}}
               ></textarea>
             </div>
             <div className="save-button">
@@ -259,7 +258,7 @@ export default function CreateTask(props) {
             </div>
           </div>
           <button 
-            onClick={() => {props.setIsClicked(!props.isClicked)}} 
+            onClick={() => {props.setIsCreateClicked(!props.isCreateClicked)}} 
             className="close-popup"
           > 
           </button>

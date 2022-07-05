@@ -42,13 +42,16 @@ export const alertSuccess = (title, message) => {
     title: `${title}`,
     text: `${message}`,
     icon: "success",
-    // didClose: () => {window.location.replace(`/${url}`)}
   });
 }
-export const alertSuccess2 = (title, message) => {
+
+export const alertSuccessNavigate = (title, message, url) => {
   Swal.fire({
     title: `${title}`,
     text: `${message}`,
     icon: "success",
+    didClose: () => {
+      window.location.reload()
+    }
   });
 }

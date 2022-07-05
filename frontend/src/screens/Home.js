@@ -6,7 +6,6 @@ import Column from "./common/Column";
 import CreateTask from "./common/CreateTask";
 import { getAllTasksNotAssinged, getAllTasksAssinged, adminAssignTask } from "../redux/apiRequest";
 import ViewTask from "./common/Viewtask";
-import Task from "./common/Task";
 import { faArrowAltCircleDown } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
@@ -42,9 +41,8 @@ export default function Home() {
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
   const tasksNotAssinged = useSelector((state) => state.task.getAllTasksNotAssinged?.tasksNotAssinged);
   const tasksAssinged = useSelector((state) => state.task.getAllTasksAssinged?.tasksAssinged);
-  const assignTask = useSelector((state) => state.task.adminAssignTask?.success);
+  // const assignTask = useSelector((state) => state.task.adminAssignTask?.success);
 
-  console.log(tasksAssinged)
 
   useEffect(() => {
     getAllTasksNotAssinged(currentUser.token, dispatch);   
@@ -140,7 +138,9 @@ export default function Home() {
 
   }
 
-  const [isClicked, setIsClicked] = useState(false); //popup modals
+  const [isCreateClicked, setIsCreateClicked] = useState(false); //popup modals
+  const [isViewClicked, setIsViewClicked] = useState(false); //popup modals
+  const [taskId, setTaskId] = useState('admin');
   
   return (
     <>
@@ -207,12 +207,16 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <button className="add-task" onClick={() => {setIsClicked(!isClicked)}}>Create Task</button>
+          <button className="add-task" onClick={() => {setIsCreateClicked(!isCreateClicked)}}>Create Task</button>
           <div className="manage">
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
               {taskList &&
                 taskList.map((user) => (
                   <Column
+                    taskId = {taskId}
+                    setTaskId = {setTaskId}
+                    setIsViewClicked={setIsViewClicked} 
+                    isViewClicked={isViewClicked}
                     key={user.name}
                     className="column"
                     droppableId={user.name}
@@ -258,8 +262,8 @@ export default function Home() {
           </div>
           <button>Change</button>
         </div>
-        {isClicked && <CreateTask setIsClicked={setIsClicked} isClicked={isClicked}/>}
-        <ViewTask />
+        {isCreateClicked && <CreateTask setIsCreateClicked={setIsCreateClicked} isCreateClicked={isCreateClicked}/> }     
+        {isViewClicked && <ViewTask setIsViewClicked={setIsViewClicked} isViewClicked={isViewClicked} taskId={taskId} setTaskId={setTaskId}/>}
       </div>
       <style>{`
           .mainpage {

@@ -44,7 +44,6 @@ import {
   alertAuthenticationError,
   alertError,
   alertSuccess,
-  alertSuccess2,
 } from "../common/libs";
 
 export const loginUser = async (user, dispatch, navigate) => {
@@ -54,7 +53,7 @@ export const loginUser = async (user, dispatch, navigate) => {
     const { data } = await axios.post(`${apiUrl}/user/login`, user);
 
     dispatch(loginSuccess(res.data));
-    navigate("/forbiden");
+    navigate("/home");
   } catch (err) {
     alertError(err.response.data.data.message);
     dispatch(loginFailed());
@@ -72,7 +71,7 @@ export const registerUser = async (user, dispatch, navigate) => {
     };
     await axios.post(`${apiUrl}/user/register`, user, config);
     dispatch(registerSuccess());
-    alertSuccess2(
+    alertSuccess(
       "Đăng ký thành công!",
       "Bạn đã đăng ký thành công vui lòng đăng nhập"
     );
@@ -160,7 +159,7 @@ export const logOut = async (dispatch) => {
   }
 };
 
-export const getTaskInfo = async (accessToken, taskId, userId, dispatch) => {
+export const getTaskInfo = async (accessToken, taskId, dispatch) => {
   dispatch(getTaskInfoStart());
   try {
     const config = {
@@ -169,25 +168,25 @@ export const getTaskInfo = async (accessToken, taskId, userId, dispatch) => {
         token: `Bearer ${accessToken}`,
       },
     };
-    const { data } = await axios.post(
+    const { data } = await axios.get(
       `${apiUrl}/task/view/${taskId}`,
-      { userId },
       config
     );
 
-    dispatch(getTaskInfoSuccess());
+    dispatch(getTaskInfoSuccess(data.data));
   } catch (error) {
     console.log(error);
     dispatch(getTaskInfoFailed());
   }
 };
 
-export const adminAddTask = async (title, description, dispatch) => {
+export const adminAddTask = async (accessToken, title, description, dispatch) => {
   dispatch(adminAddTaskStart());
   try {
     const config = {
       headers: {
         "content-type": "application/json",
+        token: `Bearer ${accessToken}`,
       },
     };
 
