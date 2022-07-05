@@ -251,10 +251,10 @@ export default function Login() {
               }}
             >
               <div>
-                <H3Style onClick={handleClickMethodLogin}>Đăng Nhập</H3Style>
+                <H3Style onClick={handleClickMethodLogin}>Login</H3Style>
               </div>
               <div>
-                <H3Style onClick={handleClickMethodLogin}>Đăng Ký</H3Style>
+                <H3Style onClick={handleClickMethodLogin}>Register</H3Style>
               </div>
             </div>
             <DecorLineStyle>
@@ -276,7 +276,7 @@ export default function Login() {
                   <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
                 </FontAwesomeIconLeftStyle>
                 <InputStyle
-                  placeholder="Tài khoản của bạn"
+                  placeholder="Your email"
                   value={username}
                   name="username"
                   onChange={handleOnChangeInfoAccount}
@@ -291,7 +291,7 @@ export default function Login() {
                     ></FontAwesomeIcon>
                   </FontAwesomeIconLeftStyle>
                   <InputStyle
-                    placeholder={"Email đăng ký"}
+                    placeholder={"Email Register"}
                     value={email}
                     name="email"
                     onChange={handleOnChangeInfoAccount}
@@ -303,7 +303,7 @@ export default function Login() {
                   <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>
                 </FontAwesomeIconLeftStyle>
                 <InputStyle
-                  placeholder="Mật khẩu"
+                  placeholder="Password"
                   type={!isVisiblePassword ? "password" :"text"}
                   value={password}
                   name="password"
@@ -327,7 +327,7 @@ export default function Login() {
               </div>
 
               <ButtonStyle onClick={(e) => handleClickSubmit(e)}>
-                {isLogin ? "Đăng Nhập" : "Đăng ký"}
+                {isLogin ? "Login" : "Register"}
               </ButtonStyle>
               <div
                 className="post-footer-container"
@@ -363,7 +363,7 @@ export default function Login() {
                         onChange={handleChangesetRemember}
                       ></input>
 
-                      <span>Ghi nhớ mật khẩu</span>
+                      <span>Remember Password</span>
                     </div>
                     <a
                       className="lost-password"
@@ -375,7 +375,7 @@ export default function Login() {
                         fontWeight: "500",
                       }}
                     >
-                      Quên mật khẩu ?
+                      Forgot Password ?
                     </a>
                   </div>
                 )}
