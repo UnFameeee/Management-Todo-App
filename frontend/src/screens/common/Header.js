@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboardList, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { logOut } from "../../redux/apiRequest";
+import { useDispatch } from "react-redux";
 
 const PrimaryColor = styled.div`
 
@@ -18,15 +20,18 @@ const BxShadow = styled.div`
 const TextColor = styled.div`
 
 `;
-const removeRole = () =>{
-  localStorage.removeItem('RoleData')
-}
 
 function handleClickedHomepage() {
   window.location.replace('/home')
 }
 
 export default function Header() {
+  const dispatch = useDispatch(); 
+
+  const logout = () =>{
+    logOut(dispatch)
+  }
+
   return (
     <>
       <div className="header-wrapper">
@@ -97,7 +102,7 @@ export default function Header() {
                 <FontAwesomeIcon icon={faClipboardList}/>
                 <span style={{marginLeft:'24px'}}>History</span>
               </Link>
-              <Link to="/login" className="menu-list" onClick={removeRole}>
+              <Link to="/login" className="menu-list" onClick={logout}>
                 <FontAwesomeIcon icon={faRightFromBracket}/>
                 <span style={{marginLeft:'20px'}}>Log Out</span>
               </Link>
