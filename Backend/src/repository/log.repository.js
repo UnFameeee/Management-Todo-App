@@ -23,8 +23,7 @@ module.exports.showLog = async() => {
         ...log,
         taskId: task
       }
-    }
+    } 
   }))
-  // console.log(data);
   return logs;
 }
