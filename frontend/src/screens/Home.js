@@ -56,7 +56,6 @@ export default function Home() {
 
   const [taskList, setTasks] = useState(initialState);
   
-  const currentUser = useSelector((state) => state.auth.login?.currentUser);
   const tasksNotAssinged = useSelector((state) => state.task.getAllTasksNotAssinged?.tasksNotAssinged);
   const tasksAssinged = useSelector((state) => state.task.getAllTasksAssinged?.tasksAssinged);
   // const assignTask = useSelector((state) => state.task.adminAssignTask?.success);
@@ -166,8 +165,8 @@ export default function Home() {
   const [isViewClicked, setIsViewClicked] = useState(false); //popup modals
   const [taskId, setTaskId] = useState('admin');
   return (
-    <>
-      <div className="mainpage">
+    <div style={{height:'100vh'}}>
+      <div className="mainpage" style={{height:'100vh'}}>
         <div className="left">
           <div className="search">
             <div className="filter">
@@ -557,6 +556,6 @@ export default function Home() {
             box-shadow: 0px 0px 6px #ffffff;
           }
         `}</style>
-    </>
+    </div>
   );
 }
