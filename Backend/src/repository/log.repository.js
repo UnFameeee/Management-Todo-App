@@ -1,6 +1,7 @@
 const Log = require('../models/log.model');
 const Task = require('../models/task.model');
 const TaskRepository = require("../repository/task.repository")
+const sequelize = require("../repository/connection")
 
 module.exports.createLog = async(userId, logInfo) => {
   return await Log.create({
@@ -11,19 +12,7 @@ module.exports.createLog = async(userId, logInfo) => {
 }
 
 module.exports.showLog = async() => {
-  // return await Log.findAll({ include: { model: Task }  });
-  const logs = await Log.findAll({});
+  const dataQueryLog = await sequelize.query("SELECT Logs.id, info, Logs.createdAt, userUpdate, Users.username, Users.email, taskId, title, description, status, isArchived FROM Logs, Tasks, Users WHERE Logs.taskId = Tasks.id AND Users.id = Logs.userUpdate ORDER BY Logs.id;");
 
-  const data = await Promise.all(logs.map(async(log)=> {
-
-    if (log.dataValues.taskId === null) return log;
-    else {
-      const task = await TaskRepository.findTaskById(log.dataValues.taskId);
-      return {
-        ...log,
-        taskId: task
-      }
-    } 
-  }))
-  return logs;
+  return dataQueryLog;
 }
