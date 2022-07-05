@@ -273,7 +273,7 @@ export const getAllTasksAssinged = async (accessToken, dispatch) => {
 
 export const getTaskLog = async (accessToken, dispatch) => {
   console.log("show log", accessToken);
-  // dispatch(getTaskLogsStart());
+  dispatch(getTaskLogsStart());
   try {
     const config = {
       headers: {
@@ -287,10 +287,10 @@ export const getTaskLog = async (accessToken, dispatch) => {
       console.log(data);
       dispatch(getTaskLogsSuccess(data));
     } else {
-      // dispatch(getTaskLogsFailed());
+      dispatch(getTaskLogsFailed());
     }
   } catch (error) {
-    // console.log(error);
-    // dispatch(getTaskLogsFailed());
+    console.log(error);
+    dispatch(getTaskLogsFailed());
   }
 };

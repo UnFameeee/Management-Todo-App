@@ -16,15 +16,18 @@ import {
 } from "../redux/apiRequest";
 import ViewTask from "./common/Viewtask";
 import Task from "./common/Task";
-import { faArrowAltCircleDown, faDashboard } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowAltCircleDown,
+  faDashboard,
+} from "@fortawesome/free-solid-svg-icons";
 import { Navigate, useNavigate } from "react-router-dom";
 export default function Home() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
-  useEffect(() => {
-    if (currentUser===null) {
-      window.location.href ='/forbiden'
-    }
-  });
+  if (currentUser === null) {
+    window.location.href = "/forbiden";
+  }
   const [imageURL, setImageURL] = useState(); // user avatar
 
   // get avatar from file
@@ -33,8 +36,6 @@ export default function Home() {
     setImageURL(URL.createObjectURL(file));
   };
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   // const getAllTasksNotAssingedReducer = useSelector(
   //   (state) => state.getAllTasksNotAssingedReducer
   // );
@@ -55,7 +56,6 @@ export default function Home() {
 
   const [taskList, setTasks] = useState(initialState);
 
-  
   const tasksNotAssinged = useSelector(
     (state) => state.task.getAllTasksNotAssinged?.tasksNotAssinged
   );
@@ -168,7 +168,6 @@ export default function Home() {
     const { draggableId, source, destination } = val;
   }
   const [isClicked, setIsClicked] = useState(false); //popup modals
- 
 
   return (
     <>
