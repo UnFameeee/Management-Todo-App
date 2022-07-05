@@ -14,7 +14,7 @@ function App() {
         <Route path="/login" element={<AuthView authRoute="login" />} />
         <Route path="/home" element={<HomeView homeRoute="home" />} />
         <Route path="/forbiden" element={<ForbidenView forbidenRoute="forbiden"/>} />
-        <Route path="/viewtask" element={<HomeView  homeRoute="viewtask" />} />
+        <Route path="/log" element={<HomeView  homeRoute="log" />} />
       </Routes>
     </BrowserRouter>
   );

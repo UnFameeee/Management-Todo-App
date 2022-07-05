@@ -98,7 +98,7 @@ export default function Header() {
             </div>         
             </div>
             <div className="header-menu">
-              <Link to="/logs" className="menu-list">
+              <Link to="/log" className="menu-list">
                 <FontAwesomeIcon icon={faClipboardList}/>
                 <span style={{marginLeft:'24px'}}>History</span>
               </Link>

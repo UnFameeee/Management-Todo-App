@@ -24,6 +24,9 @@ import {
   getTaskInfoFailed,
   getTaskInfoStart,
   getTaskInfoSuccess,
+  getTaskLogsFailed,
+  getTaskLogsStart,
+  getTaskLogsSuccess,
   getTasksFailed,
   getTasksStart,
   getTasksSuccess,
@@ -34,7 +37,12 @@ import {
   updateTaskUserOwnerStart,
   updateTaskUserOwnerSuccess,
 } from "./taskSlice";
-import { alertSuccess } from "../common/libs";
+import {
+  alertAuthenticationError,
+  alertError,
+  alertSuccess,
+  alertSuccess2,
+} from "../common/libs";
 
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart());
@@ -43,8 +51,9 @@ export const loginUser = async (user, dispatch, navigate) => {
     const { data } = await axios.post(`${apiUrl}/user/login`, user);
 
     dispatch(loginSuccess(res.data));
-    navigate("/home");
+    navigate("/forbiden");
   } catch (err) {
+    alertError(err.response.data.data.message);
     dispatch(loginFailed());
   }
 };
@@ -60,8 +69,13 @@ export const registerUser = async (user, dispatch, navigate) => {
     };
     await axios.post(`${apiUrl}/user/register`, user, config);
     dispatch(registerSuccess());
-    navigate("/forbiden");
+    alertSuccess2(
+      "Đăng ký thành công!",
+      "Bạn đã đăng ký thành công vui lòng đăng nhập"
+    );
   } catch (err) {
+    alertError(err.response.data.message);
+    console.log(err.response.data.message);
     dispatch(registerFailed());
   }
 };
@@ -143,28 +157,27 @@ export const logOut = async (dispatch) => {
   }
 };
 
-export const getTaskInfo =
-  async (accessToken, taskId, userId, dispatch) => {
-    dispatch(getTaskInfoStart());
-    try {
-      const config = {
-        headers: {
-          "content-type": "application/json",
-          token: `Bearer ${accessToken}`,
-        },
-      };
-      const { data } = await axios.post(
-        `${apiUrl}/task/view/${taskId}`,
-        { userId },
-        config
-      );
+export const getTaskInfo = async (accessToken, taskId, userId, dispatch) => {
+  dispatch(getTaskInfoStart());
+  try {
+    const config = {
+      headers: {
+        "content-type": "application/json",
+        token: `Bearer ${accessToken}`,
+      },
+    };
+    const { data } = await axios.post(
+      `${apiUrl}/task/view/${taskId}`,
+      { userId },
+      config
+    );
 
-      dispatch(getTaskInfoSuccess());
-    } catch (error) {
-      console.log(error);
-      dispatch(getTaskInfoFailed());
-    }
-  };
+    dispatch(getTaskInfoSuccess());
+  } catch (error) {
+    console.log(error);
+    dispatch(getTaskInfoFailed());
+  }
+};
 
 export const adminAddTask = async (title, description, dispatch) => {
   dispatch(adminAddTaskStart());
@@ -224,7 +237,7 @@ export const getAllTasksNotAssinged = async (accessToken, dispatch) => {
         token: `Bearer ${accessToken}`,
       },
     };
-    const { data } = await axios.get(`${apiUrl}/task/newTasks`,config);
+    const { data } = await axios.get(`${apiUrl}/task/newTasks`, config);
 
     if (data) {
       dispatch(getAllTasksNotAssingedSuccess(data));
@@ -237,7 +250,7 @@ export const getAllTasksNotAssinged = async (accessToken, dispatch) => {
   }
 };
 
-export const getAllTasksAssinged = async (accessToken,dispatch) => {
+export const getAllTasksAssinged = async (accessToken, dispatch) => {
   dispatch(getAllTasksAssingedStart());
   try {
     const config = {
@@ -246,7 +259,7 @@ export const getAllTasksAssinged = async (accessToken,dispatch) => {
         token: `Bearer ${accessToken}`,
       },
     };
-    const { data } = await axios.get(`${apiUrl}/user/viewTask`,config);
+    const { data } = await axios.get(`${apiUrl}/user/viewTask`, config);
 
     if (data) {
       dispatch(getAllTasksAssingedSuccess(data));
@@ -256,5 +269,29 @@ export const getAllTasksAssinged = async (accessToken,dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch(getAllTasksAssingedFailed());
+  }
+};
+
+export const getTaskLog = async (accessToken, dispatch) => {
+  console.log("show log", accessToken);
+  // dispatch(getTaskLogsStart());
+  try {
+    const config = {
+      headers: {
+        "content-type": "application/json",
+        token: `Bearer ${accessToken}`,
+      },
+    };
+    const { data } = await axios.get(`${apiUrl}/log/show`, config);
+
+    if (data) {
+      console.log(data);
+      dispatch(getTaskLogsSuccess(data));
+    } else {
+      // dispatch(getTaskLogsFailed());
+    }
+  } catch (error) {
+    // console.log(error);
+    // dispatch(getTaskLogsFailed());
   }
 };

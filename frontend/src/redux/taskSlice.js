@@ -41,6 +41,11 @@ const taskSlice = createSlice({
             tasksAssinged:null,
             isFetching:false,
             error:false
+        },
+        getTaskLogs:{
+            taskLogs:null,
+            isFetching:false,
+            error:false
         }
 
     },
@@ -144,6 +149,17 @@ const taskSlice = createSlice({
             state.getAllTasksAssinged.isFetching= false;
             state.getAllTasksAssinged.error = true;
         },
+        getTaskLogsStart: (state) =>{
+            state.getTaskLogs.isFetching = true;
+        },
+        getTaskLogsSuccess: (state,action) =>{
+            state.getTaskLogs.isFetching = false;
+            state.getTaskLogs.taskLogs = action.payload;
+        },
+        getTaskLogsFailed: (state) =>{
+            state.getTaskLogs.isFetching= false;
+            state.getTaskLogs.error = true;
+        },
     }
 });
 
@@ -171,7 +187,10 @@ export const {
     getAllTasksNotAssingedSuccess,
     getAllTasksAssingedFailed,
     getAllTasksAssingedStart,
-    getAllTasksAssingedSuccess
+    getAllTasksAssingedSuccess,
+    getTaskLogsFailed,
+    getTaskLogsStart,
+    getTaskLogsSuccess
 } = taskSlice.actions
 
 export default taskSlice.reducer

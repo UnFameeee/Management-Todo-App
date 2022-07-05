@@ -15,7 +15,7 @@ module.exports.handleValidation = (req, res, next) => {
     error.status = "fail";
     error.statusCode = 400;
     errors.errors.forEach(element => {
-      error.message += `${element.msg}\n`
+      error.message += `${element.msg} \n\r`
     });
     throw error;
   }

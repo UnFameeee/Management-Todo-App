@@ -1,9 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTasks, logOut, updateTask, updateTaskUserOwner } from "../redux/apiRequest";
-
+import { Navigate, useNavigate } from "react-router-dom";
 function Forbiden() {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   //lay token
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
   
@@ -29,8 +30,12 @@ function Forbiden() {
   const logout = () =>{
     logOut(dispatch)
   }
+  const goTolog = () =>{
+    navigate('/log')
+  }
   return (
     <div>
+    <button onClick={goTolog}>go to log</button>
       <button onClick={getAllTask}>Test get all task</button>
       <button onClick={updatetask}>Test update task</button>
       <button onClick={updateuserowner}>Test update user owner </button>
