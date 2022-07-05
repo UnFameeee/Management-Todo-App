@@ -166,7 +166,6 @@ export default function Login() {
         email:username,
         password:password
       }
-      console.log(User)
       loginUser(User,dispatch,navigate)
       // dispatch(loginAccountAction(username, password));
     } else {

@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllTasksNotAssingedAction, getAllTasksAssingedAction, adminAddTaskAction, adminAssignTaskAction  } from "../behaviors/actions/admin";
 import Column from "./common/Column";
 import CreateTask from "./common/CreateTask";
-import { alertSuccess } from "../common/libs";
+import { getAllTasksNotAssinged, getAllTasksAssinged, adminAssignTask } from "../redux/apiRequest";
 import ViewTask from "./common/Viewtask";
+import Task from "./common/Task";
 
 export default function Home() {
   const [imageURL, setImageURL] = useState(); // user avatar
@@ -17,15 +18,15 @@ export default function Home() {
   };
 
   const dispatch = useDispatch();
-  const getAllTasksNotAssingedReducer = useSelector(
-    (state) => state.getAllTasksNotAssingedReducer
-  );
-  const { TasksNotAssigned } = getAllTasksNotAssingedReducer;
+  // const getAllTasksNotAssingedReducer = useSelector(
+  //   (state) => state.getAllTasksNotAssingedReducer
+  // );
+  // const { TasksNotAssigned } = getAllTasksNotAssingedReducer;
 
-  const getAllTasksAssingedReducer = useSelector(
-    (state) => state.getAllTasksAssingedReducer
-  );
-  const { TasksAssigned } = getAllTasksAssingedReducer; 
+  // const getAllTasksAssingedReducer = useSelector(
+  //   (state) => state.getAllTasksAssingedReducer
+  // );
+  // const { TasksAssigned } = getAllTasksAssingedReducer; 
 
   let initialState = [
     {
@@ -36,29 +37,27 @@ export default function Home() {
   ];   
 
   const [taskList, setTasks] = useState(initialState);
+  
+  const currentUser = useSelector((state) => state.auth.login?.currentUser);
+  const tasksNotAssinged = useSelector((state) => state.task.getAllTasksNotAssinged?.tasksNotAssinged);
+  const tasksAssinged = useSelector((state) => state.task.getAllTasksAssinged?.tasksAssinged);
+  // const assignTask = useSelector((state) => state.task.adminAssignTask?.success);
 
   useEffect(() => {
-    dispatch(getAllTasksNotAssingedAction());
+    getAllTasksNotAssinged(currentUser.token, dispatch);
   }, []);
 
   useEffect(() => {
-    if(TasksAssigned) {
-      if(TasksNotAssigned) initialState[0].tasks = TasksNotAssigned.data
-      for(let i=0;i<TasksAssigned.data.length; i++){
-        initialState.push(TasksAssigned.data[i]);
+    if(tasksAssinged) {
+      if(tasksNotAssinged) initialState[0].tasks = tasksNotAssinged.data
+      for(let i=0;i<tasksAssinged.data.length;i++){
+        initialState.push(tasksAssinged.data[i]);
       }
       setTasks(initialState)
       return;
     }
-    dispatch(getAllTasksAssingedAction());
-  }, [TasksAssigned]);
-
-  const roleData = localStorage.getItem("RoleData");
-  useEffect(() => {
-    if (!roleData) {
-      window.location.replace("/forbiden");
-    }
-  }, [roleData]); 
+    getAllTasksAssinged(currentUser.token, dispatch);
+  }, [tasksAssinged]);
   
   function onDragEnd(val) {    
     /// A different way!
@@ -79,12 +78,14 @@ export default function Home() {
 
     if(destinationGroup.id==='admin'|| sourceGroup===destinationGroup) return;
     
-    dispatch(adminAssignTaskAction(destinationGroup.id, destinationGroup.name, draggableId));
+    // adminAssignTask(currentUser.token, destinationGroup.id, destinationGroup.name, draggableId, dispatch);
 
     // We save the task we are moving
     const [movingTask] = sourceGroup.tasks.filter((t) => t.id === draggableId);
+    
+    console.log(sourceGroup.tasks, source.index);
 
-    const newSourceGroupTasks = sourceGroup.tasks.splice(source.index, 1);
+    const newSourceGroupTasks = sourceGroup.tasks.splice(parseInt(source.index), 1);
     const newDestinationGroupTasks = destinationGroup.tasks.splice(
       destination.index,
       0,
@@ -110,6 +111,7 @@ export default function Home() {
     });
     setTasks(newTaskList);
   }
+
 
   function onDragStart(val) {
     

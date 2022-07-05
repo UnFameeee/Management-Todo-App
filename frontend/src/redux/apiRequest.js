@@ -41,10 +41,9 @@ export const loginUser = async (user, dispatch, navigate) => {
   try {
     const res = await axios.post(`${apiUrl}/user/login`, user);
     const { data } = await axios.post(`${apiUrl}/user/login`, user);
-    console.log(data);
 
     dispatch(loginSuccess(res.data));
-    navigate("/forbiden");
+    navigate("/home");
   } catch (err) {
     dispatch(loginFailed());
   }
@@ -145,7 +144,7 @@ export const logOut = async (dispatch) => {
 };
 
 export const getTaskInfo =
-  () => async (accessToken, taskId, userId, dispatch) => {
+  async (accessToken, taskId, userId, dispatch) => {
     dispatch(getTaskInfoStart());
     try {
       const config = {
@@ -167,7 +166,7 @@ export const getTaskInfo =
     }
   };
 
-export const adminAddTask = () => async (title, description, dispatch) => {
+export const adminAddTask = async (title, description, dispatch) => {
   dispatch(adminAddTaskStart());
   try {
     const config = {
@@ -216,7 +215,7 @@ export const adminAssignTask =
     }
   };
 
-export const getAllTasksNotAssinged = () => async (accessToken, dispatch) => {
+export const getAllTasksNotAssinged = async (accessToken, dispatch) => {
   dispatch(getAllTasksNotAssingedStart());
   try {
     const config = {
@@ -238,7 +237,7 @@ export const getAllTasksNotAssinged = () => async (accessToken, dispatch) => {
   }
 };
 
-export const getAllTasksAssinged = () => async (accessToken,dispatch) => {
+export const getAllTasksAssinged = async (accessToken,dispatch) => {
   dispatch(getAllTasksAssingedStart());
   try {
     const config = {
