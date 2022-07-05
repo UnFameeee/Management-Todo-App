@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,6 +7,8 @@ import {
   faList,
   faBriefcase,
 } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { getTaskInfo } from "../../redux/apiRequest";
 
 const Body = styled.div`
   > #popup {
@@ -16,7 +18,7 @@ const Body = styled.div`
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
-    display: ${(props) => (props.isClicked ? "block" : "none")};
+    display: ${(props) => (props.isViewClicked ? "block" : "none")};
 
     .popup-content {
       border-radius: 10px;
@@ -182,31 +184,42 @@ const Body = styled.div`
   }
 `;
 export default function ViewTask(props) {
-  const [description, setDescription] = useState("");
-  const [isClickedAddMember, setIsClickedAddMember] = useState("false");
-  const roleData = localStorage.getItem("Roledata");
-  const handleClickedAddMember = () => {
-    setIsClickedAddMember((current) => !current);
-  };
+  const [description, setDescription] = useState();
   const getDescription = (event) => {
     setDescription(event.target.value);
   };
+  
+  const dispatch = useDispatch()
+  const currentUser = useSelector((state) => state.auth.login?.currentUser);
+  const taskInfo = useSelector((state) => state.task.getTaskInfo?.taskInfo);
+
+  useEffect(() => {
+    setDescription(taskInfo?taskInfo.description:'')
+    getTaskInfo(currentUser.token, props.taskId, dispatch);
+  }, []) 
+
   return (
-    <Body isClicked={props.isClicked} isClickedAddMember={isClickedAddMember}>
+    <Body isViewClicked={props.isViewClicked}>
       <div id="popup">
         <div className="popup-content">
           <div className="popup-header">
             <FontAwesomeIcon icon={faBriefcase} />
-            <h2 className="task-title"> Install Package</h2>
+            <h2 className="task-title">Task Info</h2>
             <div className="header-status">
               <p className="status-text" style={{ margin: "0" }}>
-                trong danh sách <a href="/">Doing</a>
+                Status <span>{taskInfo?taskInfo.status:''}</span>
               </p>
+
+              <div className="">
+                <span>Task title: </span>
+                <span>{taskInfo?taskInfo.title:''}</span>
+              </div>
+
             </div>
           </div>
           <div className="assign-container-content">
             <div className="task-members">
-              <p>Thành viên</p>
+              <p>Task Assignee</p>
               <div className="member-avatars">
                 <div className="member-avatars-circle">
                   <FontAwesomeIcon
@@ -214,7 +227,10 @@ export default function ViewTask(props) {
                     icon={faUser}
                   ></FontAwesomeIcon>
                 </div>
-                <div className="member-add-circle">
+
+                <span>{taskInfo?taskInfo.user.username:''}</span>
+
+                {/* <div className="member-add-circle">
                   <FontAwesomeIcon
                     className="avatar-icon"
                     icon={faPlus}
@@ -243,14 +259,14 @@ export default function ViewTask(props) {
                       x
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
           <div className="description">
             <div className="header">
               <FontAwesomeIcon icon={faList} />
-              <h2 className="des-title">Mô tả</h2>
+              <h2 className="des-title">Description</h2>
             </div>
             <div className="text-area">
               <textarea
@@ -260,11 +276,11 @@ export default function ViewTask(props) {
             </div>
             <div className="save-button">
               <button className="save">Lưu</button>
-              {roleData && <button className="archived">Lưu trữ</button>}
+              <button className="archived">Lưu trữ</button>
             </div>
           </div>
 
-          <button onClick={() => {props.setIsClicked(!props.isClicked)}} className="close-popup">
+          <button onClick={() => {props.setIsViewClicked(!props.isViewClicked)}} className="close-popup">
             x
           </button>
         </div>
