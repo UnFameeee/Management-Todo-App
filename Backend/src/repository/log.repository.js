@@ -1,6 +1,4 @@
 const Log = require('../models/log.model');
-const Task = require('../models/task.model');
-const TaskRepository = require("../repository/task.repository")
 const sequelize = require("../repository/connection")
 
 module.exports.createLog = async(userId, logInfo) => {
