@@ -22,6 +22,11 @@ const taskSlice = createSlice({
             isFetching:false,
             error:false
         },
+        getUserInfo:{
+            userInfo:null,
+            isFetching:false,
+            error:false
+        },
         adminAddTask:{
             isFetching:false,
             success:false,
@@ -100,6 +105,18 @@ const taskSlice = createSlice({
             state.getTaskInfo.error = true;
         },
 
+        getUserInfoStart: (state) =>{
+            state.getUserInfo.isFetching = true;
+        },
+        getUserInfoSuccess: (state,action) =>{
+            state.getUserInfo.isFetching = false;
+            state.getUserInfo.userInfo = action.payload;
+        },
+        getUserInfoFailed: (state) =>{
+            state.getUserInfo.isFetching= false;
+            state.getUserInfo.error = true;
+        },
+
         adminAddTaskStart: (state) =>{
             state.adminAddTask.isFetching = true;
         },
@@ -176,6 +193,9 @@ export const {
     getTaskInfoFailed,
     getTaskInfoSuccess,
     getTaskInfoStart,
+    getUserInfoFailed,
+    getUserInfoSuccess,
+    getUserInfoStart,
     adminAddTaskFailed,
     adminAddTaskStart,
     adminAddTaskSuccess,

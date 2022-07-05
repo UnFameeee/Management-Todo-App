@@ -53,7 +53,6 @@ export default function Home() {
       tasks: [],
     },
   ];
-
   const [taskList, setTasks] = useState(initialState);
   
   const tasksNotAssinged = useSelector((state) => state.task.getAllTasksNotAssinged?.tasksNotAssinged);
@@ -164,6 +163,7 @@ export default function Home() {
   const [isCreateClicked, setIsCreateClicked] = useState(false); //popup modals
   const [isViewClicked, setIsViewClicked] = useState(false); //popup modals
   const [taskId, setTaskId] = useState('admin');
+
   return (
     <div style={{height:'100vh'}}>
       <div className="mainpage" style={{height:'100vh'}}>
@@ -277,13 +277,10 @@ export default function Home() {
               <label>Username:</label>
               <input></input>
             </div>
-            <div className="user-info">
-              <label>Job:</label>
-              <input></input>
-            </div>
           </div>
           <button>Change</button>
         </div>
+        
         {isCreateClicked && <CreateTask setIsCreateClicked={setIsCreateClicked} isCreateClicked={isCreateClicked}/> }     
         {isViewClicked && <ViewTask setIsViewClicked={setIsViewClicked} isViewClicked={isViewClicked} taskId={taskId} setTaskId={setTaskId}/>}
 
