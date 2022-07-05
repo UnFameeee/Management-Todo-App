@@ -7,6 +7,7 @@ import CreateTask from "./common/CreateTask";
 import { getAllTasksNotAssinged, getAllTasksAssinged, adminAssignTask } from "../redux/apiRequest";
 import ViewTask from "./common/Viewtask";
 import Task from "./common/Task";
+import { faArrowAltCircleDown } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
   const [imageURL, setImageURL] = useState(); // user avatar
@@ -41,11 +42,14 @@ export default function Home() {
   const currentUser = useSelector((state) => state.auth.login?.currentUser);
   const tasksNotAssinged = useSelector((state) => state.task.getAllTasksNotAssinged?.tasksNotAssinged);
   const tasksAssinged = useSelector((state) => state.task.getAllTasksAssinged?.tasksAssinged);
-  // const assignTask = useSelector((state) => state.task.adminAssignTask?.success);
+  const assignTask = useSelector((state) => state.task.adminAssignTask?.success);
+
+  console.log(tasksAssinged)
 
   useEffect(() => {
-    getAllTasksNotAssinged(currentUser.token, dispatch);
-  }, []);
+    getAllTasksNotAssinged(currentUser.token, dispatch);   
+    getAllTasksAssinged(currentUser.token, dispatch); 
+  },[]);
 
   useEffect(() => {
     if(tasksAssinged) {
@@ -54,12 +58,31 @@ export default function Home() {
         initialState.push(tasksAssinged.data[i]);
       }
       setTasks(initialState)
-      return;
     }
-    getAllTasksAssinged(currentUser.token, dispatch);
-  }, [tasksAssinged]);
+  }, [tasksAssinged, tasksNotAssinged]);
+
+  function deleteElement(array, id){
+    if (id>=array.length) return array;
+    else{
+      const task = array[id];
+      return array.filter((data)=>{
+        return (data!==task);
+      })
+    }
+  }
+
+  function addElement(array, id, data){
+    let newArr = [];
+    console.log(id, data);
+    for (let i=0;i<array.length;i++){
+      if (i === id) newArr.push(data);
+      newArr.push(array[i]);
+    }
+    if (id>=array.length) newArr.push(data)
+    return newArr;
+  }
   
-  function onDragEnd(val) {    
+  async function onDragEnd(val) {    
     /// A different way!
     const { draggableId, source, destination } = val;
 
@@ -78,30 +101,27 @@ export default function Home() {
 
     if(destinationGroup.id==='admin'|| sourceGroup===destinationGroup) return;
     
-    // adminAssignTask(currentUser.token, destinationGroup.id, destinationGroup.name, draggableId, dispatch);
+    await adminAssignTask(currentUser.token, destinationGroup.id, destinationGroup.name, draggableId, dispatch);
 
     // We save the task we are moving
     const [movingTask] = sourceGroup.tasks.filter((t) => t.id === draggableId);
     
-    console.log(sourceGroup.tasks, source.index);
-
-    const newSourceGroupTasks = sourceGroup.tasks.splice(parseInt(source.index), 1);
-    const newDestinationGroupTasks = destinationGroup.tasks.splice(
-      destination.index,
-      0,
-      movingTask
-    );
+    
+    // const newSourceGroupTasks = sourceGroup.tasks.prototype.splice(source.index, 1);
+    const newSourceGroupTasks = deleteElement(sourceGroup.tasks, source.index)
+    //const newDestinationGroupTasks = destinationGroup.tasks.splice(destination.index, 0, movingTask);
+    const newDestinationGroupTasks = addElement(destinationGroup.tasks, destination.index, movingTask);
 
     // Mapping over the task lists means that you can easily
     // add new columns
     const newTaskList = taskList.map((column) => {
-      if (column.name === source.name) {
+      if (column.name === source.droppableId) {
         return {
           name: column.name,
           tasks: newSourceGroupTasks,
         };
       }
-      if (column.name === destination.name) {
+      if (column.name === destination.droppableId) {
         return {
           name: column.name,
           tasks: newDestinationGroupTasks,
@@ -110,8 +130,9 @@ export default function Home() {
       return column; 
     });
     setTasks(newTaskList);
+    getAllTasksAssinged(currentUser.token, dispatch);
+    getAllTasksNotAssinged(currentUser.token, dispatch);
   }
-
 
   function onDragStart(val) {
     
@@ -192,7 +213,7 @@ export default function Home() {
               {taskList &&
                 taskList.map((user) => (
                   <Column
-                    key={user.id}
+                    key={user.name}
                     className="column"
                     droppableId={user.name}
                     list={user.tasks}

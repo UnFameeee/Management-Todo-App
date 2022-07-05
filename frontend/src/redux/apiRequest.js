@@ -15,6 +15,9 @@ import {
   adminAddTaskFailed,
   adminAddTaskStart,
   adminAddTaskSuccess,
+  adminAssignTaskFailed,
+  adminAssignTaskStart,
+  adminAssignTaskSuccess,
   getAllTasksAssingedFailed,
   getAllTasksAssingedStart,
   getAllTasksAssingedSuccess,
@@ -188,9 +191,8 @@ export const adminAddTask = async (title, description, dispatch) => {
   }
 };
 
-export const adminAssignTask =
-  () => async (accessToken, userId, username, taskid, dispatch) => {
-    dispatch(adminAddTaskStart());
+export const adminAssignTask = async (accessToken, userId, username, taskid, dispatch) => {
+    dispatch(adminAssignTaskStart());
     try {
       const config = {
         headers: {
@@ -198,20 +200,20 @@ export const adminAssignTask =
           token: `Bearer ${accessToken}`,
         },
       };
-
+      
       const { data } = await axios.put(
         `${apiUrl}/task/update/${taskid}/user`,
         { userId },
         config
       );
-
+      
       if (data)
-        alertSuccess(`Assign Task`, `To ${username} Successfully`, "home");
+        alertSuccess(`Assign Task`, `To ${username} Successfully`);
 
-      dispatch(adminAddTaskSuccess());
+      dispatch(adminAssignTaskSuccess());
     } catch (error) {
       console.log(error);
-      dispatch(adminAddTaskFailed());
+      dispatch(adminAssignTaskFailed());
     }
   };
 
@@ -248,11 +250,8 @@ export const getAllTasksAssinged = async (accessToken,dispatch) => {
     };
     const { data } = await axios.get(`${apiUrl}/user/viewTask`,config);
 
-    if (data) {
-      dispatch(getAllTasksAssingedSuccess(data));
-    } else {
-      dispatch(getAllTasksAssingedFailed());
-    }
+    dispatch(getAllTasksAssingedSuccess(data));
+    
   } catch (error) {
     console.log(error);
     dispatch(getAllTasksAssingedFailed());

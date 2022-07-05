@@ -30,11 +30,11 @@ export const alertAuthenticationError = (message) => {
   });
 };
 
-export const alertSuccess = (title, message, url) => {
+export const alertSuccess = (title, message) => {
   Swal.fire({
     title: `${title}`,
     text: `${message}`,
     icon: "success",
-    didClose: () => {window.location.replace(`/${url}`)}
+    // didClose: () => {window.location.replace(`/${url}`)}
   });
 }
