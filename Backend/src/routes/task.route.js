@@ -1,12 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const { param } = require("express-validator");
+const { param, body } = require("express-validator");
 const { handleValidation } = require("../middleware/validation.middleware")
 
 const { addTask, updateTaskOwner, updateData, viewTask, getNewTasks } = require('../controller/task.controller')
 const { isAuthenticatedUser, authorizeUserRole } = require('../middleware/authenticate.middleware')
 
-router.route('/create').post(isAuthenticatedUser, authorizeUserRole('leader'), addTask);
+router.route('/create').post([
+  body("title")
+    .isLength({ min: 1 })
+    .withMessage("Title can't be empty"),
+  body("description")
+    .isLength({ min: 1 })
+    .withMessage("Description can't be empty"),
+], handleValidation, isAuthenticatedUser, authorizeUserRole('leader'), addTask);
 
 router.route("/update/:id/user").put([
   param("id")
