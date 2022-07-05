@@ -27,6 +27,9 @@ import {
   getTaskInfoFailed,
   getTaskInfoStart,
   getTaskInfoSuccess,
+  getUserInfoFailed,
+  getUserInfoStart,
+  getUserInfoSuccess,
   getTaskLogsFailed,
   getTaskLogsStart,
   getTaskLogsSuccess,
@@ -44,6 +47,7 @@ import {
   alertAuthenticationError,
   alertError,
   alertSuccess,
+  alertSuccessNavigate,
 } from "../common/libs";
 
 export const loginUser = async (user, dispatch, navigate) => {
@@ -109,13 +113,14 @@ export const updateTask = async (accessToken, taskInfo, taskId, dispatch) => {
         token: `Bearer ${accessToken}`,
       },
     };
-    await axios.put(`${apiUrl}/task/update/${taskId}`, taskInfo, config);
+
     const res = await axios.put(
       `${apiUrl}/task/update/${taskId}`,
       taskInfo,
       config
     );
-    console.log(res.data);
+    
+    if(res) alertSuccessNavigate('Update Task ', `${taskInfo.title} successfully`,'/home')
     dispatch(updateTaskSuccess());
   } catch (err) {
     dispatch(updateTaskFailed());
@@ -177,6 +182,27 @@ export const getTaskInfo = async (accessToken, taskId, dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch(getTaskInfoFailed());
+  }
+};
+
+export const getUserInfo = async (accessToken, userid, dispatch) => {
+  dispatch(getUserInfoStart());
+  try {
+    const config = {
+      headers: {
+        "content-type": "application/json",
+        token: `Bearer ${accessToken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${apiUrl}/user/${userid}`,
+      config
+    );
+
+    dispatch(getUserInfoSuccess(data.data));
+  } catch (error) {
+    console.log(error);
+    dispatch(getUserInfoFailed());
   }
 };
 

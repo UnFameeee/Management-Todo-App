@@ -5,7 +5,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { getTaskLog, logOut } from "../../redux/apiRequest";
+import { getTaskLog, getUserInfo, logOut } from "../../redux/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
@@ -32,6 +32,11 @@ export default function Header() {
   const gettasklogs = () =>{
     getTaskLog(currentUser.token,dispatch)
   }
+  const userInfo = useSelector((state) => state.task.getUserInfo?.userInfo);
+
+  useEffect(() => {
+    getUserInfo(currentUser.token, currentUser.data.data.id, dispatch)
+  }, []);
 
   return (
     <>
@@ -49,7 +54,7 @@ export default function Header() {
               </picture>
               <div className="builder-image-sizer image-sizer" />
             </div>
-            <div className="div-5">Tenent</div>
+            <div className="div-5">Task App</div>
           </div>
           <div className="div-6">
             <div className="builder-columns div-7">
@@ -81,8 +86,8 @@ export default function Header() {
               </div>
               <div className="builder-column column-3">
                 <div className="div-10">
-                  <div className="div-11">Hoàng Vũ</div>
-                  <div className="div-12">Frontend Dev</div>
+                  <div className="div-11">{userInfo?userInfo.username:'not found'}</div>
+                  <div className="div-12">{userInfo?userInfo.role.toUpperCase():'daden'}</div>
                 </div>
               </div>
               <div className="builder-column column-4">

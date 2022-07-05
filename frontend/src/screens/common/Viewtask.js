@@ -8,13 +8,15 @@ import {
   faBriefcase,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { getTaskInfo } from "../../redux/apiRequest";
+import { getTaskInfo, updateTask } from "../../redux/apiRequest";
+import { alertSuccess } from "../../common/libs";
 
 const Body = styled.div`
   > #popup {
     position: fixed;
     top: 0px;
     left: 0px;
+    padding-top: 30px;
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
@@ -22,8 +24,8 @@ const Body = styled.div`
 
     .popup-content {
       border-radius: 10px;
-      width: 70vw;
-      height: 70vh;
+      width: 60vw;
+      height: 60vh;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -33,6 +35,7 @@ const Body = styled.div`
 
       .popup-header {
         display: flex;
+        padding: 10px 30px;
         align-items: center;
         justify-content: flex-start;
         gap: 10px;
@@ -42,11 +45,17 @@ const Body = styled.div`
         }
       }
       .header-status {
+        margin: 10px 30px;
         position: absolute;
         top: 45px;
         left: 47px;
         a {
           color: black;
+        }
+        status {
+
+        }
+        span {
         }
       }
       .assign-container-content {
@@ -55,8 +64,8 @@ const Body = styled.div`
         display: flex;
 
         .task-members {
-          margin-right: 20px;
-          margin-left: 27px;
+          margin: 30px 30px;
+          font-size: 20px;
 
           .member-avatars {
             display: flex;
@@ -128,8 +137,9 @@ const Body = styled.div`
       }
       .description {
         height: 150px;
-        margin-top: 20px;
         .header {
+          margin: 0 30px;
+          margin-bottom: 10px;
           display: flex;
           align-items: center;
           justify-content: flex-start;
@@ -148,6 +158,8 @@ const Body = styled.div`
             width: 90%;
             height: 100%;
             resize: none;
+            font-size:16px;
+            padding: 10px;
           }
         }
         .save-button {
@@ -156,10 +168,16 @@ const Body = styled.div`
           display: flex;
           gap: 15px;
           .save {
-            --sizing: 40px;
+            border-radius: 10px;
+            --sizing: 100px;
             width: var(--sizing);
-            height: 30px;
+            height: 40px;
+            background-color: black;
+            color: white;
             cursor: pointer;
+          }
+          .save:hover {
+            box-shadow: 0 0 10px black;
           }
           .archived {
             --sizing: 70px;
@@ -184,7 +202,7 @@ const Body = styled.div`
   }
 `;
 export default function ViewTask(props) {
-  const [description, setDescription] = useState();
+  const [description, setDescription] = useState('');
   const getDescription = (event) => {
     setDescription(event.target.value);
   };
@@ -198,6 +216,16 @@ export default function ViewTask(props) {
     getTaskInfo(currentUser.token, props.taskId, dispatch);
   }, []) 
 
+  let title = taskInfo?taskInfo.title:'';
+  const taskUpdate = {
+    title,
+    description,
+  }
+
+  async function handleUpdateTask () {
+    updateTask(currentUser.token, taskUpdate, props.taskId, dispatch)
+  }
+
   return (
     <Body isViewClicked={props.isViewClicked}>
       <div id="popup">
@@ -206,14 +234,12 @@ export default function ViewTask(props) {
             <FontAwesomeIcon icon={faBriefcase} />
             <h2 className="task-title">Task Info</h2>
             <div className="header-status">
-              <p className="status-text" style={{ margin: "0" }}>
-                Status <span>{taskInfo?taskInfo.status:''}</span>
+              <p className="status-text" style={{ margin: "10px 30px;" }}>
+                Status <span className="status">{taskInfo?taskInfo.status:''}</span>
               </p>
 
-              <div className="">
-                <span>Task title: </span>
-                <span>{taskInfo?taskInfo.title:''}</span>
-              </div>
+              <span className="title">Task title: </span>
+              <span className="title-txt">{taskInfo?taskInfo.title:''}</span>
 
             </div>
           </div>
@@ -275,8 +301,8 @@ export default function ViewTask(props) {
               ></textarea>
             </div>
             <div className="save-button">
-              <button className="save">Lưu</button>
-              <button className="archived">Lưu trữ</button>
+              <button className="save" onClick={handleUpdateTask}>Update</button>
+              {/* <button className="archived">Lưu trữ</button> */}
             </div>
           </div>
 

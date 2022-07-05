@@ -54,9 +54,7 @@ export default function Home() {
     },
   ];
 
-  const [taskList, setTasks] = useState(initialState);
-  
-  const currentUser = useSelector((state) => state.auth.login?.currentUser);
+  const [taskList, setTasks] = useState(initialState);  
   const tasksNotAssinged = useSelector((state) => state.task.getAllTasksNotAssinged?.tasksNotAssinged);
   const tasksAssinged = useSelector((state) => state.task.getAllTasksAssinged?.tasksAssinged);
   // const assignTask = useSelector((state) => state.task.adminAssignTask?.success);
@@ -165,9 +163,10 @@ export default function Home() {
   const [isCreateClicked, setIsCreateClicked] = useState(false); //popup modals
   const [isViewClicked, setIsViewClicked] = useState(false); //popup modals
   const [taskId, setTaskId] = useState('admin');
+
   return (
-    <>
-      <div className="mainpage">
+    <div style={{height:'100vh'}}>
+      <div className="mainpage" style={{height:'100vh'}}>
         <div className="left">
           <div className="search">
             <div className="filter">
@@ -278,13 +277,10 @@ export default function Home() {
               <label>Username:</label>
               <input></input>
             </div>
-            <div className="user-info">
-              <label>Job:</label>
-              <input></input>
-            </div>
           </div>
           <button>Change</button>
         </div>
+        
         {isCreateClicked && <CreateTask setIsCreateClicked={setIsCreateClicked} isCreateClicked={isCreateClicked}/> }     
         {isViewClicked && <ViewTask setIsViewClicked={setIsViewClicked} isViewClicked={isViewClicked} taskId={taskId} setTaskId={setTaskId}/>}
 
@@ -557,6 +553,6 @@ export default function Home() {
             box-shadow: 0px 0px 6px #ffffff;
           }
         `}</style>
-    </>
+    </div>
   );
 }
