@@ -54,7 +54,7 @@ export const loginUser = async (user, dispatch, navigate) => {
     const { data } = await axios.post(`${apiUrl}/user/login`, user);
 
     dispatch(loginSuccess(res.data));
-    navigate("/forbiden");
+    navigate("/home");
   } catch (err) {
     alertError(err.response.data.data.message);
     dispatch(loginFailed());

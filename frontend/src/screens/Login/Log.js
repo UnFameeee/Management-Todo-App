@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { getTaskLog } from "../../redux/apiRequest";
 const Body = styled.div`
+  button {
+    padding: 10px;
+  }
   table,
   th,
   td {
@@ -19,30 +22,50 @@ function Log() {
   const showLog = () => {
     getTaskLog(currentUser.token, dispatch);
   };
-  const taskLogs = useSelector((state) => state.task.getTaskLogs?.taskLogs);
+  const { data } = useSelector((state) => state.task.getTaskLogs?.taskLogs);
+
   useEffect(() => {
-    if (taskLogs) {
-      console.log(taskLogs);
+    if (data) {
+      console.log(data);
     }
-  }, [taskLogs]);
+  }, []);
   return (
     <Body>
-      <button onClick={showLog}> show log</button>
+      <button onClick={showLog}>Show Log</button>
       <table>
-        <tr>
-          <th>id</th>
-          <th>info</th>
-          <th>created date</th>
-          <th>user update</th>
-          <th>task id</th>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>user admin login to system</td>
-          <td>7/52022</td>
-          <td>lmao</td>
-          <td>null</td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Info</th>
+            <th>Created date</th>
+            <th>User update</th>
+            <th>User name</th>
+            <th>User email</th>
+            <th>Task id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>IsArchived</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data &&
+            data.map((data) => (
+              <tr key={data.id}>
+                <td>{data.id}</td>
+                <td>{data.info}</td>
+                <td>{data.createdAt}</td>
+                <td>{data.userUpdate}</td>
+                <th>User name</th>
+                <th>User email</th>
+                <td>{data.taskId}</td>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>IsArchived</th>
+              </tr>
+            ))}
+        </tbody>
       </table>
     </Body>
   );

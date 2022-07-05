@@ -196,7 +196,7 @@ export default function Login() {
   return (
     <div
       className="container"
-      style={{ background: "linear-gradient(to right, #dd1818, #333333)" }}
+      style={{ background: "linear-gradient(to right, #dd1818, #333333)", height:'100vh' }}
     >
       <div
         style={{
