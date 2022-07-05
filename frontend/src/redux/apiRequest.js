@@ -76,8 +76,8 @@ export const registerUser = async (user, dispatch, navigate) => {
     await axios.post(`${apiUrl}/user/register`, user, config);
     dispatch(registerSuccess());
     alertSuccess(
-      "Đăng ký thành công!",
-      "Bạn đã đăng ký thành công vui lòng đăng nhập"
+      "Register successfully",
+      "Please login your account"
     );
   } catch (err) {
     alertError(err.response.data.message);
@@ -251,6 +251,7 @@ export const adminAssignTask = async (accessToken, userId, username, taskid, dis
       dispatch(adminAssignTaskSuccess());
     } catch (error) {
       console.log(error);
+      alertError("You are not allow to assign task")
       dispatch(adminAssignTaskFailed());
     }
   };

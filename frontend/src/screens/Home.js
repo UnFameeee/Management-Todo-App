@@ -53,8 +53,8 @@ export default function Home() {
       tasks: [],
     },
   ];
-
-  const [taskList, setTasks] = useState(initialState);  
+  const [taskList, setTasks] = useState(initialState);
+  
   const tasksNotAssinged = useSelector((state) => state.task.getAllTasksNotAssinged?.tasksNotAssinged);
   const tasksAssinged = useSelector((state) => state.task.getAllTasksAssinged?.tasksAssinged);
   // const assignTask = useSelector((state) => state.task.adminAssignTask?.success);
